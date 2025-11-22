@@ -3,122 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Windows 10 Web Simulation</title>
+    <title>Win10 Web OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div id="orientation-lock">
-        <div class="lock-content">
-            <svg viewBox="0 0 24 24" width="64" height="64" fill="white">
-                <path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03-3.81 3.81 1.33 1.33c3.27-1.55 5.61-4.72 5.97-8.48h1.65zM7.52 21.48c-3.27-1.55-5.61-4.72-5.97-8.48h-1.5C.56 19.16 5.71 24 12 24l.66-.03 3.81-3.81-1.33-1.33c-3.27 1.55-5.61 4.72-5.97 8.48H7.52zM12 5c-3.87 0-7 3.13-7 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-            </svg>
-            <p>请旋转设备以获得最佳体验</p>
-        </div>
+        <i class="fa-solid fa-rotate fa-3x fa-spin-pulse"></i>
+        <p>请旋转设备以进入桌面模式</p>
     </div>
 
     <div id="boot-trigger">
         <div class="power-btn">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="white">
-                <path d="M16.56,5.44L15.11,6.89C16.84,7.94 18,9.83 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,18C6,9.83 7.16,7.94 8.88,6.88L7.44,5.44C5.36,6.88 4,9.28 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12C20,9.28 18.64,6.88 16.56,5.44M13,3H11V13H13" />
-            </svg>
+            <i class="fa-solid fa-power-off fa-2x"></i>
         </div>
-        <p>点击启动系统</p>
+        <p>点击开启系统</p>
     </div>
 
     <div id="boot-screen">
-        <div class="win-logo-boot">
-            <svg viewBox="0 0 88 88" fill="#00a4ef">
-                <path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l-.028 34.453L0 75.604V46.156zm4.315-38.816L88 0v41.854l-48.015.339zM88 46.27v41.615l-47.983-7.02V46.493z"/>
-            </svg>
+        <div class="win-logo">
+            <i class="fa-brands fa-windows"></i>
         </div>
-        <div class="loader">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
+        <div class="spinner">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
     </div>
 
-    <div id="desktop-environment">
+    <div id="desktop">
         
-        <div class="desktop-icons">
-            <div class="app-icon" ondblclick="alert('打开此电脑')">
-                <div class="icon-img">
-                    <svg viewBox="0 0 64 64" width="40" height="40">
-                        <path d="M4,12 L16,12 L20,16 L60,16 L60,52 L4,52 Z" fill="#FBC02D"/>
-                        <rect x="10" y="22" width="44" height="24" fill="#FFF" opacity="0.3"/>
-                    </svg>
-                </div>
-                <span>此电脑</span>
-            </div>
-            
-            <div class="app-icon" ondblclick="alert('打开回收站')">
-                <div class="icon-img">
-                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#ddd" stroke-width="1.5">
-                        <path d="M4 7l16 0" />
-                        <path d="M10 11l0 6" />
-                        <path d="M14 11l0 6" />
-                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                    </svg>
-                </div>
-                <span>回收站</span>
+        <div class="icon-grid" id="icon-container">
             </div>
 
-            <div class="app-icon" onclick="window.open('https://www.google.com', '_blank')">
-                 <div class="icon-img">
-                    <svg viewBox="0 0 24 24" width="40" height="40" fill="#3399ff">
-                        <path d="M12,2C17.52,2 22,6.48 22,12C22,17.52 17.52,22 12,22C6.48,22 2,17.52 2,12C2,6.48 6.48,2 12,2M11,7V14.1L16.2,17.2L17,15.9L12.5,13.2V7H11Z" fill="#fff"/>
-                        <circle cx="12" cy="12" r="10" fill="none" stroke="#0078d7" stroke-width="2"/>
-                    </svg>
+        <div id="window-layer"></div>
+
+        <div id="context-menu">
+            <div class="menu-item"><i class="fa-solid fa-arrows-rotate"></i> 刷新</div>
+            <div class="menu-item"><i class="fa-solid fa-display"></i> 个性化</div>
+            <div class="divider"></div>
+            <div class="menu-item" onclick="location.reload()"><i class="fa-solid fa-power-off"></i> 重启系统</div>
+        </div>
+
+        <div id="taskbar">
+            <div class="start-btn" id="start-btn">
+                <i class="fa-brands fa-windows"></i>
+            </div>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="在这里输入你要搜索的内容...">
+            </div>
+            
+            <div class="task-apps" id="task-apps"></div>
+
+            <div class="system-tray">
+                <div class="tray-icon"><i class="fa-solid fa-wifi"></i></div>
+                <div class="tray-icon"><i class="fa-solid fa-volume-high"></i></div>
+                <div class="clock">
+                    <span id="time">12:00</span>
+                    <span id="date">2023/10/01</span>
                 </div>
-                <span>浏览器</span>
+                <div class="tray-icon msg"><i class="fa-regular fa-comment-dots"></i></div>
             </div>
         </div>
 
         <div id="start-menu">
             <div class="sidebar">
-                <div class="side-icon">User</div>
-                <div class="side-icon">⚙</div>
-                <div class="side-icon">⏻</div>
+                <div class="s-btn"><i class="fa-solid fa-bars"></i></div>
+                <div class="bottom-group">
+                    <div class="s-btn"><i class="fa-solid fa-user"></i></div>
+                    <div class="s-btn"><i class="fa-solid fa-gear"></i></div>
+                    <div class="s-btn" onclick="location.reload()"><i class="fa-solid fa-power-off"></i></div>
+                </div>
             </div>
-            <div class="tile-grid">
-                <div class="tile medium blue">Word</div>
-                <div class="tile medium green">Excel</div>
-                <div class="tile wide red">Mail</div>
-                <div class="tile small gray">Calc</div>
-                <div class="tile small gray">Map</div>
+            <div class="menu-content">
+                <h3>最近添加</h3>
+                <div class="app-list-item">
+                    <i class="fa-brands fa-chrome" style="color:#E13630"></i> Google Chrome
+                </div>
+                <div class="app-list-item">
+                    <i class="fa-solid fa-calculator" style="color:#28A8EA"></i> Calculator
+                </div>
+                <h3>磁贴</h3>
+                <div class="tiles">
+                    <div class="tile medium blue"><i class="fa-brands fa-edge"></i><span>Edge</span></div>
+                    <div class="tile medium green"><i class="fa-brands fa-xbox"></i><span>Xbox</span></div>
+                    <div class="tile wide red"><i class="fa-solid fa-envelope"></i><span>Mail</span></div>
+                </div>
             </div>
         </div>
 
-        <div id="taskbar">
-            <div class="start-btn" id="start-btn">
-                <svg viewBox="0 0 88 88" fill="white" width="20" height="20">
-                    <path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l-.028 34.453L0 75.604V46.156zm4.315-38.816L88 0v41.854l-48.015.339zM88 46.27v41.615l-47.983-7.02V46.493z"/>
-                </svg>
-            </div>
-            <div class="search-bar">
-                <span>🔍 在这里输入你要搜索的内容</span>
-            </div>
-            <div class="task-icons">
-                <div class="t-icon active">📂</div>
-                <div class="t-icon">🌐</div>
-            </div>
-            <div class="system-tray">
-                <div class="tray-icon">^</div>
-                <div class="tray-icon">📶</div>
-                <div class="tray-icon">🔊</div>
-                <div class="clock">
-                    <div id="time">12:00</div>
-                    <div id="date">2023/10/01</div>
-                </div>
-                <div class="notification-area">💬</div>
-            </div>
-        </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="js/window_mgr.js"></script>
+    <script src="js/system.js"></script>
 </body>
 </html>
