@@ -1,1 +1,319 @@
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
 
+body {
+    overflow: hidden;
+    background-color: #000;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* === 强制横屏逻辑 === */
+#orientation-lock {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #333;
+    z-index: 9999;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 如果高度大于宽度（竖屏），显示提示 */
+@media screen and (orientation: portrait) {
+    #orientation-lock {
+        display: flex;
+    }
+}
+
+/* === 开机引导层 === */
+#boot-trigger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #fff;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.power-btn {
+    background: #333;
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+}
+.power-btn:hover {
+    transform: scale(1.1);
+    background: #444;
+}
+
+/* === 开机动画层 === */
+#boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    display: none; /* 初始隐藏，点击后显示 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.win-logo-boot {
+    margin-bottom: 60px;
+    width: 100px;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    animation: rotate 2.5s infinite linear;
+}
+
+.circle {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    animation: spin 2s infinite ease-in-out;
+}
+.circle:nth-child(1) { animation-delay: 0s; }
+.circle:nth-child(2) { animation-delay: 0.2s; }
+.circle:nth-child(3) { animation-delay: 0.4s; }
+.circle:nth-child(4) { animation-delay: 0.6s; }
+.circle:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes rotate { 100% { transform: rotate(360deg); } }
+@keyframes spin { 
+    0%, 100% { opacity: 0; transform: scale(0.5); } 
+    50% { opacity: 1; transform: scale(1.2); } 
+}
+
+/* === 桌面环境 === */
+#desktop-environment {
+    width: 100%;
+    height: 100%;
+    /* 经典的 Win10 英雄壁纸风格 */
+    background: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    opacity: 0; /* 开机后淡入 */
+    transition: opacity 1s ease;
+}
+
+/* 桌面图标 */
+.desktop-icons {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 90%;
+    width: fit-content;
+    gap: 10px;
+}
+
+.app-icon {
+    width: 80px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    color: white;
+    font-size: 12px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    cursor: default;
+    transition: background 0.1s;
+}
+
+.app-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.icon-img {
+    margin-bottom: 5px;
+}
+
+/* === 任务栏 === */
+#taskbar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.start-btn {
+    width: 48px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.start-btn:hover { background: rgba(255,255,255,0.1); }
+
+.search-bar {
+    background: white;
+    height: 100%;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: #666;
+    font-size: 13px;
+    border: 1px solid #444;
+}
+
+.task-icons {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    padding-left: 10px;
+}
+
+.t-icon {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: 0.2s;
+    border-bottom: 2px solid transparent;
+}
+.t-icon:hover { background: rgba(255,255,255,0.1); }
+.t-icon.active { border-bottom: 2px solid #0078d7; background: rgba(255,255,255,0.05); }
+
+.system-tray {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding-right: 10px;
+    color: white;
+    font-size: 12px;
+}
+
+.tray-icon { padding: 0 8px; height: 100%; display: flex; align-items: center; }
+.tray-icon:hover { background: rgba(255,255,255,0.1); }
+
+.clock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    height: 100%;
+    font-size: 11px;
+    cursor: default;
+}
+.clock:hover { background: rgba(255,255,255,0.1); }
+
+.notification-area {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+.notification-area:hover { background: rgba(255,255,255,0.1); }
+
+/* === 开始菜单 === */
+#start-menu {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 400px;
+    height: 500px;
+    background: rgba(28, 28, 28, 0.95);
+    backdrop-filter: blur(15px);
+    display: flex;
+    transform: translateY(110%); /* 初始隐藏 */
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 90;
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+}
+
+#start-menu.open {
+    transform: translateY(0);
+}
+
+.sidebar {
+    width: 48px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 10px;
+}
+
+.side-icon {
+    width: 48px;
+    height: 48px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.side-icon:hover { background: rgba(255,255,255,0.1); }
+
+.tile-grid {
+    flex: 1;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 80px;
+    gap: 4px;
+    overflow-y: auto;
+}
+
+.tile {
+    background: #0078d7;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: flex-end;
+    transition: transform 0.1s;
+}
+.tile:hover { outline: 2px solid #fff; z-index: 1; }
+.tile:active { transform: scale(0.98); }
+
+.tile.medium { grid-column: span 2; }
+.tile.wide { grid-column: span 4; }
+.tile.blue { background: #0078d7; }
+.tile.green { background: #107c10; }
+.tile.red { background: #d13438; }
+.tile.gray { background: #555; }
