@@ -1,319 +1,140 @@
-/* 全局重置 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+/* === 全局设置 === */
+:root {
+    --theme-blue: #0078d7;
+    --taskbar-bg: rgba(18, 18, 18, 0.85);
+    --window-bg: #ffffff;
+    --glass: blur(15px) saturate(120%);
 }
 
-body {
-    overflow: hidden;
-    background-color: #000;
-    height: 100vh;
-    width: 100vw;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Segoe UI', sans-serif; }
+body { overflow: hidden; background: #000; width: 100vw; height: 100vh; }
 
-/* === 强制横屏逻辑 === */
+/* === 1. 强制横屏 (Mobile) === */
 #orientation-lock {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #333;
-    z-index: 9999;
-    color: white;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%;
+    background: #2d2d2d; color: white; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
 }
+@media screen and (orientation: portrait) { #orientation-lock { display: flex; } }
 
-/* 如果高度大于宽度（竖屏），显示提示 */
-@media screen and (orientation: portrait) {
-    #orientation-lock {
-        display: flex;
-    }
-}
-
-/* === 开机引导层 === */
+/* === 2. 开机引导与动画 === */
 #boot-trigger {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    color: #fff;
-    z-index: 3000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    position: fixed; z-index: 5000; width: 100%; height: 100%; background: #000; color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
 }
-.power-btn {
-    background: #333;
-    border-radius: 50%;
-    padding: 20px;
-    margin-bottom: 15px;
-    transition: transform 0.2s;
+.power-btn { 
+    width: 80px; height: 80px; border-radius: 50%; border: 2px solid #fff; 
+    display: flex; align-items: center; justify-content: center; transition: 0.3s; margin-bottom: 20px;
 }
-.power-btn:hover {
-    transform: scale(1.1);
-    background: #444;
-}
+.power-btn:active { background: #fff; color: #000; transform: scale(0.95); }
 
-/* === 开机动画层 === */
 #boot-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 2000;
-    display: none; /* 初始隐藏，点击后显示 */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: fixed; z-index: 4000; width: 100%; height: 100%; background: #000; color: #00adef;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+.win-logo i { font-size: 100px; margin-bottom: 80px; }
+.spinner { display: flex; gap: 15px; }
+.dot { width: 10px; height: 10px; background: white; border-radius: 50%; animation: fade 1.5s infinite ease-in-out; }
+.dot:nth-child(1){animation-delay:0s}.dot:nth-child(2){animation-delay:0.2s}.dot:nth-child(3){animation-delay:0.4s}.dot:nth-child(4){animation-delay:0.6s}.dot:nth-child(5){animation-delay:0.8s}
+@keyframes fade { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1); } }
+
+/* === 3. 桌面环境 === */
+#desktop {
+    width: 100%; height: 100%; position: relative; opacity: 0; transition: opacity 0.5s;
+    background: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
 }
 
-.win-logo-boot {
-    margin-bottom: 60px;
-    width: 100px;
+/* 图标网格 (Grid Layout) */
+.icon-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, 80px); grid-auto-rows: 100px;
+    height: calc(100% - 40px); padding: 10px; flex-direction: column; gap: 5px; align-content: flex-start;
 }
 
-.loader {
-    width: 50px;
-    height: 50px;
-    position: relative;
-    animation: rotate 2.5s infinite linear;
+.d-icon {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10px;
+    color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); border: 1px solid transparent; transition: 0.1s; border-radius: 2px;
 }
+.d-icon i { font-size: 32px; margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.d-icon span { font-size: 12px; text-align: center; line-height: 1.2; max-width: 70px; word-wrap: break-word; }
+.d-icon:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+.d-icon:active { transform: scale(0.98); }
 
-.circle {
-    width: 8px;
-    height: 8px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    animation: spin 2s infinite ease-in-out;
+/* 右键菜单 */
+#context-menu {
+    position: absolute; width: 200px; background: #eee; border: 1px solid #aaa; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: none; z-index: 9999; flex-direction: column; padding: 5px 0;
 }
-.circle:nth-child(1) { animation-delay: 0s; }
-.circle:nth-child(2) { animation-delay: 0.2s; }
-.circle:nth-child(3) { animation-delay: 0.4s; }
-.circle:nth-child(4) { animation-delay: 0.6s; }
-.circle:nth-child(5) { animation-delay: 0.8s; }
+.menu-item { padding: 8px 15px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 10px;}
+.menu-item:hover { background: #ddd; }
+.divider { height: 1px; background: #ccc; margin: 4px 10px; }
 
-@keyframes rotate { 100% { transform: rotate(360deg); } }
-@keyframes spin { 
-    0%, 100% { opacity: 0; transform: scale(0.5); } 
-    50% { opacity: 1; transform: scale(1.2); } 
+/* === 4. 窗口系统 (重点扩展) === */
+.window {
+    position: absolute; background: var(--window-bg); border: 1px solid #0078d7;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+    min-width: 300px; min-height: 200px; overflow: hidden; animation: popIn 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
+@keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-/* === 桌面环境 === */
-#desktop-environment {
-    width: 100%;
-    height: 100%;
-    /* 经典的 Win10 英雄壁纸风格 */
-    background: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-    background-size: cover;
-    position: relative;
-    opacity: 0; /* 开机后淡入 */
-    transition: opacity 1s ease;
+.win-header {
+    height: 30px; background: #fff; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 10px; cursor: grab; border-bottom: 1px solid #eee;
 }
+.win-header:active { cursor: grabbing; }
+.win-title { font-size: 12px; display: flex; align-items: center; gap: 8px; pointer-events: none; }
+.win-controls { display: flex; height: 100%; }
+.win-btn { width: 40px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s; cursor: pointer;}
+.win-btn:hover { background: #eee; }
+.win-btn.close:hover { background: #e81123; color: white; }
 
-/* 桌面图标 */
-.desktop-icons {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    height: 90%;
-    width: fit-content;
-    gap: 10px;
-}
+.win-body { flex: 1; position: relative; overflow: hidden; background: #f9f9f9; }
 
-.app-icon {
-    width: 80px;
-    height: 90px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid transparent;
-    color: white;
-    font-size: 12px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    cursor: default;
-    transition: background 0.1s;
-}
+/* 窗口内的应用样式 (Calculator & Browser) */
+.calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); height: 100%; }
+.calc-btn { border: 1px solid #eee; background: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.calc-btn:active { background: #ccc; }
+.calc-display { grid-column: span 4; background: #eee; font-size: 32px; display: flex; align-items: center; justify-content: flex-end; padding: 0 20px; }
+iframe { border: none; width: 100%; height: 100%; }
 
-.app-icon:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.icon-img {
-    margin-bottom: 5px;
-}
-
-/* === 任务栏 === */
+/* === 5. 任务栏 === */
 #taskbar {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    background: rgba(20, 20, 20, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    z-index: 100;
+    position: absolute; bottom: 0; width: 100%; height: 40px; background: var(--taskbar-bg);
+    backdrop-filter: var(--glass); z-index: 5000; display: flex; align-items: center;
 }
+.start-btn { width: 48px; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; transition: 0.2s; }
+.start-btn:hover, .start-btn.active { background: rgba(255,255,255,0.1); color: #4cc2ff; }
 
-.start-btn {
-    width: 48px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
+.search-box {
+    background: #fff; height: 30px; width: 200px; margin-left: 10px; display: flex; align-items: center; padding: 0 10px; font-size: 12px; color: #666;
 }
-.start-btn:hover { background: rgba(255,255,255,0.1); }
+@media (max-width: 600px) { .search-box { display: none; } } /* 手机隐藏搜索框 */
 
-.search-bar {
-    background: white;
-    height: 100%;
-    width: 300px;
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    color: #666;
-    font-size: 13px;
-    border: 1px solid #444;
+.task-apps { flex: 1; display: flex; height: 100%; padding-left: 10px; gap: 4px; }
+.task-item {
+    width: 40px; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;
+    border-bottom: 3px solid transparent; transition: 0.2s; position: relative;
 }
+.task-item:hover { background: rgba(255,255,255,0.1); }
+.task-item.active { border-bottom-color: #4cc2ff; background: rgba(255,255,255,0.05); }
+.task-item::after { /* 小蓝点指示器 */ content: ''; position: absolute; bottom: 0; width: 0%; transition: 0.2s; background: #4cc2ff; height: 2px; }
 
-.task-icons {
-    flex: 1;
-    display: flex;
-    height: 100%;
-    padding-left: 10px;
-}
-
-.t-icon {
-    width: 40px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    transition: 0.2s;
-    border-bottom: 2px solid transparent;
-}
-.t-icon:hover { background: rgba(255,255,255,0.1); }
-.t-icon.active { border-bottom: 2px solid #0078d7; background: rgba(255,255,255,0.05); }
-
-.system-tray {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    padding-right: 10px;
-    color: white;
-    font-size: 12px;
-}
-
+.system-tray { display: flex; height: 100%; color: white; align-items: center; padding-right: 10px; gap: 5px; font-size: 12px; }
 .tray-icon { padding: 0 8px; height: 100%; display: flex; align-items: center; }
-.tray-icon:hover { background: rgba(255,255,255,0.1); }
+.clock { display: flex; flex-direction: column; text-align: center; padding: 0 8px; font-size: 11px; }
 
-.clock {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 10px;
-    height: 100%;
-    font-size: 11px;
-    cursor: default;
-}
-.clock:hover { background: rgba(255,255,255,0.1); }
-
-.notification-area {
-    width: 40px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-left: 1px solid rgba(255,255,255,0.1);
-}
-.notification-area:hover { background: rgba(255,255,255,0.1); }
-
-/* === 开始菜单 === */
+/* === 6. 开始菜单 === */
 #start-menu {
-    position: absolute;
-    bottom: 40px;
-    left: 0;
-    width: 400px;
-    height: 500px;
-    background: rgba(28, 28, 28, 0.95);
-    backdrop-filter: blur(15px);
-    display: flex;
-    transform: translateY(110%); /* 初始隐藏 */
-    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 90;
-    border-top: 1px solid #333;
-    border-right: 1px solid #333;
+    position: absolute; bottom: 40px; left: 0; width: 320px; height: 400px;
+    background: rgba(30, 30, 30, 0.95); backdrop-filter: var(--glass); color: white;
+    display: flex; z-index: 4999; transform: translateY(110%); transition: transform 0.2s ease-out;
 }
-
-#start-menu.open {
-    transform: translateY(0);
-}
-
-.sidebar {
-    width: 48px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 10px;
-}
-
-.side-icon {
-    width: 48px;
-    height: 48px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.side-icon:hover { background: rgba(255,255,255,0.1); }
-
-.tile-grid {
-    flex: 1;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 80px;
-    gap: 4px;
-    overflow-y: auto;
-}
-
-.tile {
-    background: #0078d7;
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-    display: flex;
-    align-items: flex-end;
-    transition: transform 0.1s;
-}
-.tile:hover { outline: 2px solid #fff; z-index: 1; }
-.tile:active { transform: scale(0.98); }
-
-.tile.medium { grid-column: span 2; }
-.tile.wide { grid-column: span 4; }
-.tile.blue { background: #0078d7; }
-.tile.green { background: #107c10; }
-.tile.red { background: #d13438; }
-.tile.gray { background: #555; }
+#start-menu.open { transform: translateY(0); }
+.sidebar { width: 48px; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 10px; align-items: center; }
+.s-btn { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+.s-btn:hover { background: rgba(255,255,255,0.1); }
+.menu-content { flex: 1; padding: 10px 15px; overflow-y: auto; }
+.app-list-item { padding: 10px; display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; }
+.app-list-item:hover { background: rgba(255,255,255,0.1); }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 10px; }
+.tile { height: 70px; background: #0078d7; padding: 5px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; }
+.tile.medium { grid-column: span 2; } .tile.wide { grid-column: span 4; }
+.tile.green { background-color: #107c10; } .tile.red { background-color: #d13438; }
