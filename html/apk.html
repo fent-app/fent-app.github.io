@@ -2,171 +2,187 @@
 <html lang="zh-cn">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>APK 收录 - 极简风格</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>APK Collection</title>
 
 <style>
-    /* ====== CSS 变量系统 (核心：通过变量实现一键换肤) ====== */
+    /* ====== 变量系统 ====== */
     :root {
-        /* 亮色模式 (Apple Light) */
-        --bg-color: #f5f5f7;
-        --header-bg: rgba(255, 255, 255, 0.7);
-        --card-bg: rgba(255, 255, 255, 0.65);
-        --text-main: #1d1d1f;
-        --text-sub: #86868b;
-        --border-color: rgba(0, 0, 0, 0.08);
-        --accent-color: #007aff; /* Apple Blue */
-        --btn-text: #fff;
-        --btn-bg: #1d1d1f;
-        --btn-hover: #333;
-        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --bg-color: #F2F2F7; /* Apple System Gray 6 */
+        --header-bg: rgba(255, 255, 255, 0.75);
+        --card-bg: rgba(255, 255, 255, 0.7);
+        --text-primary: #000000;
+        --text-secondary: #8E8E93;
+        --accent: #007AFF;
+        --border: rgba(0, 0, 0, 0.05);
+        --btn-bg: #FFFFFF;
+        --btn-text: #007AFF;
+        --shadow: 0 4px 20px rgba(0,0,0,0.05);
+        --input-bg: rgba(118, 118, 128, 0.12);
+        --gap: 16px;
     }
 
-    body.dark {
-        /* 暗色模式 (Telegram/Apple Dark) */
-        --bg-color: #1c1c1e; /* 深灰黑 */
-        --header-bg: rgba(28, 28, 30, 0.7);
-        --card-bg: rgba(44, 44, 46, 0.7);
-        --text-main: #f5f5f7;
-        --text-sub: #a1a1a6;
-        --border-color: rgba(255, 255, 255, 0.1);
-        --accent-color: #0a84ff;
-        --btn-text: #000;
-        --btn-bg: #fff;
-        --btn-hover: #e5e5e5;
-        --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    html.dark {
+        --bg-color: #000000;
+        --header-bg: rgba(28, 28, 30, 0.75);
+        --card-bg: rgba(28, 28, 30, 0.7);
+        --text-primary: #FFFFFF;
+        --text-secondary: #98989D;
+        --accent: #0A84FF;
+        --border: rgba(255, 255, 255, 0.1);
+        --btn-bg: #1C1C1E;
+        --btn-text: #0A84FF;
+        --shadow: 0 4px 20px rgba(0,0,0,0.3);
+        --input-bg: rgba(118, 118, 128, 0.24);
     }
 
-    /* ====== 全局基础 ====== */
+    /* ====== 全局重置 ====== */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body {
         margin: 0;
         padding: 0;
         background-color: var(--bg-color);
-        color: var(--text-main);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease; /* 丝滑切换动画 */
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+        padding-bottom: 40px;
+        transition: background-color 0.3s ease; /* 给不支持 ViewTransition 的浏览器兜底 */
     }
 
-    /* ====== 顶栏 ====== */
+    /* ====== 顶部导航 (Glassmorphism) ====== */
     header {
         position: sticky;
         top: 0;
-        padding: 16px 20px;
+        z-index: 100;
         background: var(--header-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-color);
-        z-index: 1000;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 0.5px solid var(--border);
+        padding: 12px var(--gap);
         display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
         align-items: center;
         justify-content: space-between;
-        transition: background 0.3s ease, border 0.3s ease;
+        gap: 12px;
     }
 
-    .header-controls {
-        display: flex;
-        gap: 10px;
+    .header-left {
         flex: 1;
-        min-width: 280px;
+        position: relative;
     }
 
-    input, select {
-        padding: 12px 16px;
-        border-radius: 12px;
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        color: var(--text-main);
-        font-size: 14px;
+    /* 自绘搜索图标 */
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        opacity: 0.5;
+        fill: var(--text-secondary);
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 12px 10px 36px;
+        border-radius: 10px;
+        border: none;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 16px; /* 防止iOS缩放 */
         outline: none;
         transition: 0.2s;
     }
-    
-    #search { flex: 2; }
-    #sort { flex: 1; }
-    
-    input:focus, select:focus {
-        border-color: var(--accent-color);
-    }
+    input:focus { background: rgba(118, 118, 128, 0.2); }
 
-    /* 主题切换按钮 */
-    #themeToggle {
-        width: 44px;
-        height: 44px;
+    /* ====== 主题切换按钮 ====== */
+    .theme-btn {
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         border: none;
-        background: var(--card-bg);
-        color: var(--text-main);
+        background: transparent;
         cursor: pointer;
-        font-size: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: 0.3s;
+        color: var(--text-primary);
+        transition: transform 0.2s;
     }
-    #themeToggle:hover { transform: scale(1.1); }
+    .theme-btn:active { transform: scale(0.9); }
+    
+    /* 自绘 SVG 图标样式 */
+    .svg-icon {
+        width: 24px;
+        height: 24px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
 
-    /* ====== 内容区 ====== */
+    /* ====== 内容区域 ====== */
     .container {
-        padding: 30px 20px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 24px;
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
+        padding: 20px var(--gap);
+        display: grid;
+        /* 响应式 Grid：手机一列，平板两列，PC三列 */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
     }
 
     /* ====== 卡片设计 ====== */
     .card {
-        padding: 24px;
-        border-radius: 22px;
         background: var(--card-bg);
-        backdrop-filter: blur(30px);
-        -webkit-backdrop-filter: blur(30px);
-        border: 1px solid var(--border-color);
-        box-shadow: var(--shadow);
+        border-radius: 18px;
+        padding: 16px;
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        gap: 12px;
         position: relative;
-        overflow: hidden;
+        box-shadow: var(--shadow);
+        border: 0.5px solid var(--border);
+        transition: transform 0.2s;
     }
 
-    .card:hover {
-        transform: translateY(-4px);
-    }
+    .card:active { transform: scale(0.98); }
 
-    .card-top {
+    .card-main {
         display: flex;
-        gap: 16px;
+        align-items: center;
+        gap: 14px;
     }
 
-    .icon {
-        width: 72px;
-        height: 72px;
-        border-radius: 18px;
+    .app-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
         object-fit: cover;
-        background: #e1e1e1;
+        background: #eee;
+        border: 0.5px solid rgba(0,0,0,0.1);
         flex-shrink: 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .info { flex: 1; }
+    .app-info {
+        flex: 1;
+        min-width: 0; /* 允许文本截断 */
+    }
 
-    .info h3 {
-        margin: 0 0 4px;
+    .app-name {
         font-size: 17px;
         font-weight: 600;
-        color: var(--text-main);
+        margin: 0 0 4px 0;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .desc {
-        margin: 0 0 8px;
-        font-size: 14px;
-        color: var(--text-sub);
+    .app-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -174,291 +190,258 @@
         overflow: hidden;
     }
 
-    /* 时间标签 */
-    .meta-time {
-        font-size: 12px;
-        color: var(--text-sub);
-        opacity: 0.8;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    /* ====== 按钮组 ====== */
-    .actions {
+    /* 按钮组 */
+    .action-row {
         display: flex;
         gap: 10px;
-        margin-top: auto; /* 推到底部 */
+        margin-top: auto;
     }
 
     .btn {
         flex: 1;
-        padding: 10px 0;
-        border-radius: 10px;
-        text-align: center;
+        padding: 8px 0;
+        border-radius: 20px; /* 胶囊形状 */
+        background: var(--input-bg);
+        color: var(--accent);
         text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
+        transition: opacity 0.2s;
     }
-
-    /* 主按钮 */
+    .btn:active { opacity: 0.6; }
+    
     .btn-primary {
-        background: var(--btn-bg);
-        color: var(--btn-text);
-    }
-    .btn-primary:hover { opacity: 0.9; transform: scale(0.98); }
-
-    /* 次要按钮 (二号链接) */
-    .btn-secondary {
-        background: transparent;
-        border: 1px solid var(--border-color);
-        color: var(--text-main);
-    }
-    .btn-secondary:hover { background: rgba(125,125,125,0.1); }
-
-    /* ====== 分页 ====== */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-        padding: 40px 0;
-        color: var(--text-main);
+        background: var(--accent);
+        color: #fff;
     }
 
-    .pagination button {
-        padding: 8px 16px;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-main);
-        cursor: pointer;
-        transition: 0.2s;
+    .btn-icon-svg {
+        width: 14px;
+        height: 14px;
     }
-    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
-    .pagination button:hover:not(:disabled) { background: var(--border-color); }
 
+    /* ====== 底部 ====== */
+    .footer-info {
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-top: 20px;
+        opacity: 0.6;
+    }
+
+    /* ====== View Transition 动画核心 (Telegram 效果) ====== */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+    }
+
+    /* 针对暗黑模式切换时的 CSS 层级控制 */
+    ::view-transition-old(root) { z-index: 1; }
+    ::view-transition-new(root) { z-index: 9999; }
+
+    /* ====== 移动端优化 ====== */
     @media (max-width: 600px) {
-        .header-controls { order: 2; width: 100%; }
-        #themeToggle { order: 1; margin-left: auto; }
-        .card { padding: 20px; }
+        .container { grid-template-columns: 1fr; } /* 强制单列 */
+        .card { border-radius: 20px; } /* 更大的圆角 */
+        .app-icon { width: 64px; height: 64px; }
     }
 </style>
 </head>
-
 <body>
 
 <header>
-    <div class="header-controls">
-        <input id="search" placeholder="&#xf002; 搜索应用..." style="font-family: 'Font Awesome 6 Free', sans-serif;" />
-        <select id="sort">
-            <option value="default">默认排序</option>
-            <option value="time">按时间 (新→旧)</option>
-            <option value="name">按名称 (A-Z)</option>
-        </select>
+    <div class="header-left">
+        <svg class="search-icon" viewBox="0 0 24 24">
+            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="搜索应用..." />
     </div>
-    <button id="themeToggle" title="切换模式">
-        <i class="fas fa-moon"></i>
-    </button>
+    
+    <button class="theme-btn" id="themeToggle" aria-label="切换主题">
+        </button>
 </header>
 
-<div class="container" id="appList"></div>
+<div class="container" id="appGrid">
+    </div>
 
-<div class="pagination">
-    <button id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-    <span id="pageInfo">1 / 1</span>
-    <button id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-</div>
+<div class="footer-info" id="statusInfo">加载中...</div>
 
 <script>
-/* ====== 你的应用数据 ====== */
-/* 字段说明：
-   name: 应用名称
-   desc: 简介
-   icon: 图标URL
-   time: 更新时间 (字符串)
-   link: 主下载链接
-   link2: (可选) 备用链接，如果没有请设为 null 或 ""
-*/
-const apps = [
-    {
-        name: "Telegram X",
-        desc: "速度极快的第三方客户端，流畅动画。",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1024px-Telegram_logo.svg.png",
-        time: "2023-10-05",
-        link: "#",
-        link2: "https://example.com/mirror/tgx.apk"
-    },
-    {
-        name: "Spotify Mod",
-        desc: "解锁部分高级功能，无广告听歌。",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png",
-        time: "2023-11-20",
-        link: "#",
-        link2: null // 没有备用链接
-    },
-    {
-        name: "VSCO 滤镜全开",
-        desc: "摄影师必备，模拟胶片质感。",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/3/32/VSCO_Seal.svg",
-        time: "2023-09-12",
-        link: "#",
-        link2: ""
-    },
-    {
-        name: "网易云音乐概念版",
-        desc: "极简设计，专注听歌体验。",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Netease_Cloud_Music_logo.svg/1024px-Netease_Cloud_Music_logo.svg.png",
-        time: "2024-01-15",
-        link: "#",
-        link2: "#"
-    },
-    {
-        name: "Chrome Beta",
-        desc: "体验谷歌浏览器最新特性。",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/1024px-Google_Chrome_icon_%28February_2022%29.svg.png",
-        time: "2024-02-01",
-        link: "#",
-        link2: null
-    }
-];
+    // ====== 数据源 ======
+    const apps = [
+        {
+            name: "Telegram X",
+            desc: "极速体验，更流畅的动画效果。",
+            icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/240px-Telegram_logo.svg.png",
+            link: "#dl1",
+            link2: "#mirror1"
+        },
+        {
+            name: "Spotify Premium",
+            desc: "无损音质，无广告打扰。",
+            icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/240px-Spotify_logo_without_text.svg.png",
+            link: "#dl2"
+        },
+        {
+            name: "VSCO Cam",
+            desc: "全滤镜解锁，摄影师必备。",
+            icon: "https://upload.wikimedia.org/wikipedia/commons/3/32/VSCO_Seal.svg",
+            link: "#dl3",
+            link2: ""
+        },
+        {
+            name: "Google Chrome",
+            desc: "快速、安全、可自定义的浏览器。",
+            icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/240px-Google_Chrome_icon_%28February_2022%29.svg.png",
+            link: "#dl4"
+        },
+        {
+            name: "YouTube Revanced",
+            desc: "后台播放，跳过视频广告。",
+            icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/240px-YouTube_full-color_icon_%282017%29.svg.png",
+            link: "#dl5",
+            link2: "#mirror"
+        }
+    ];
 
-/* ====== 拼音工具 (简易版) ====== */
-function toPinyin(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
+    // ====== 图标 SVG 定义 (自绘) ======
+    const Icons = {
+        sun: `<svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
+        moon: `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+        download: `<svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
+        link: `<svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
+    };
 
-/* ====== 状态管理 ====== */
-let filtered = [...apps];
-let currentPage = 1;
-const pageSize = 9; // PC端每页多显示一点
+    // ====== 渲染逻辑 ======
+    const grid = document.getElementById('appGrid');
+    const statusInfo = document.getElementById('statusInfo');
+    const searchInput = document.getElementById('searchInput');
 
-/* ====== 渲染核心 ====== */
-function render() {
-    const start = (currentPage - 1) * pageSize;
-    const end = start + pageSize;
-    const list = document.getElementById("appList");
-    list.innerHTML = "";
-
-    const currentData = filtered.slice(start, end);
-
-    if (currentData.length === 0) {
-        list.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-sub); padding:40px;">未找到相关应用</div>`;
-        document.getElementById("pageInfo").textContent = "0 / 0";
-        return;
-    }
-
-    currentData.forEach(app => {
-        // 检查是否有二号链接
-        const hasLink2 = app.link2 && app.link2.trim() !== "";
+    function render(data) {
+        grid.innerHTML = '';
+        if (data.length === 0) {
+            statusInfo.textContent = "未找到应用";
+            return;
+        }
         
-        // 动态生成二号按钮 HTML
-        const link2HTML = hasLink2 
-            ? `<a href="${app.link2}" class="btn btn-secondary" title="备用下载" download>
-                 <i class="fas fa-link"></i> 备用
-               </a>` 
-            : "";
+        data.forEach(app => {
+            const hasLink2 = app.link2 && app.link2.trim() !== "";
+            // 如果有备用链接，主按钮变小；否则主按钮占满
+            const btnHtml = hasLink2 ? 
+                `<a href="${app.link}" class="btn btn-primary">
+                    ${Icons.download} 获取
+                 </a>
+                 <a href="${app.link2}" class="btn">
+                    ${Icons.link} 备用
+                 </a>` :
+                `<a href="${app.link}" class="btn btn-primary" style="width:100%">
+                    ${Icons.download} 获取
+                 </a>`;
 
-        // 根据是否有二号链接调整主按钮样式（如果只有1个按钮，让它宽一点）
-        const link1Style = ""; 
-
-        list.innerHTML += `
-        <div class="card">
-            <div class="card-top">
-                <img class="icon" src="${app.icon}" loading="lazy" />
-                <div class="info">
-                    <h3>${app.name}</h3>
-                    <div class="meta-time">
-                        <i class="far fa-clock"></i> ${app.time}
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-main">
+                    <img src="${app.icon}" class="app-icon" loading="lazy" alt="icon">
+                    <div class="app-info">
+                        <div class="app-name">${app.name}</div>
+                        <div class="app-desc">${app.desc}</div>
                     </div>
-                    <p class="desc">${app.desc}</p>
                 </div>
-            </div>
-            <div class="actions">
-                <a href="${app.link}" class="btn btn-primary" ${link1Style} download>
-                    <i class="fas fa-download"></i> 获取
-                </a>
-                ${link2HTML}
-            </div>
-        </div>
-        `;
+                <div class="action-row">
+                    ${btnHtml}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        statusInfo.textContent = `${data.length} 个应用`;
+    }
+
+    // ====== 搜索 ======
+    searchInput.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase();
+        const filtered = apps.filter(app => 
+            app.name.toLowerCase().includes(val) || 
+            app.desc.toLowerCase().includes(val)
+        );
+        render(filtered);
     });
 
-    const total = Math.ceil(filtered.length / pageSize);
-    document.getElementById("pageInfo").textContent = `${currentPage} / ${total}`;
-    document.getElementById("prevBtn").disabled = currentPage === 1;
-    document.getElementById("nextBtn").disabled = currentPage >= total || total === 0;
-}
+    // ====== Telegram 风格主题切换 (核心动画) ======
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
 
-/* ====== 逻辑控制 ====== */
-// 1. 搜索
-function fuzzyMatch(app, key) {
-    key = key.toLowerCase();
-    return (
-        app.name.toLowerCase().includes(key) ||
-        app.desc.toLowerCase().includes(key) ||
-        toPinyin(app.name).includes(key)
-    );
-}
-
-document.getElementById("search").addEventListener("input", e => {
-    const key = e.target.value.trim();
-    currentPage = 1;
-    filtered = apps.filter(app => fuzzyMatch(app, key));
-    render();
-});
-
-// 2. 排序
-document.getElementById("sort").addEventListener("change", e => {
-    const type = e.target.value;
-    if (type === "name") {
-        filtered.sort((a,b) => a.name.localeCompare(b.name, 'zh'));
-    } else if (type === "time") {
-        filtered.sort((a,b) => new Date(b.time) - new Date(a.time));
-    } else {
-        filtered = [...apps]; // 恢复默认顺序需要原始ID，这里简化为重置
+    // 1. 初始化图标
+    function updateThemeIcon() {
+        const isDark = html.classList.contains('dark');
+        themeToggle.innerHTML = isDark ? Icons.sun : Icons.moon;
     }
-    currentPage = 1;
-    render();
-});
 
-// 3. 分页
-document.getElementById("prevBtn").onclick = () => { currentPage--; render(); };
-document.getElementById("nextBtn").onclick = () => { currentPage++; render(); };
-
-// 4. 暗黑模式切换 logic
-const themeToggle = document.getElementById("themeToggle");
-const body = document.body;
-const icon = themeToggle.querySelector("i");
-
-// 初始化：检查本地存储或系统偏好
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-    body.classList.add("dark");
-    icon.classList.replace("fa-moon", "fa-sun");
-}
-
-themeToggle.addEventListener("click", () => {
-    body.classList.toggle("dark");
-    const isDark = body.classList.contains("dark");
-    
-    // 切换图标
-    if (isDark) {
-        icon.classList.replace("fa-moon", "fa-sun");
-        localStorage.setItem("theme", "dark");
-    } else {
-        icon.classList.replace("fa-sun", "fa-moon");
-        localStorage.setItem("theme", "light");
+    // 检查本地存储
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
     }
-});
+    updateThemeIcon();
 
-// 初次渲染
-render();
+    // 2. 切换逻辑
+    themeToggle.addEventListener('click', (event) => {
+        // 如果浏览器不支持 View Transitions，直接切换
+        if (!document.startViewTransition) {
+            toggleTheme();
+            return;
+        }
+
+        // 获取点击坐标
+        const x = event.clientX;
+        const y = event.clientY;
+
+        // 计算扩散圆的最大半径 (勾股定理)
+        const endRadius = Math.hypot(
+            Math.max(x, innerWidth - x),
+            Math.max(y, innerHeight - y)
+        );
+
+        // 开始视图转换
+        const transition = document.startViewTransition(() => {
+            toggleTheme();
+        });
+
+        // 定义动画
+        transition.ready.then(() => {
+            const clipPath = [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+            ];
+            
+            // 决定是谁在动：如果是变黑，黑色圆圈扩散；如果是变亮，亮色圆圈扩散
+            // 这里的逻辑是：新视图(View-New) 也是基于 classList 变动后的状态
+            document.documentElement.animate(
+                {
+                    clipPath: clipPath,
+                },
+                {
+                    duration: 500,
+                    easing: "ease-in", // 加速扩散，更像 Telegram
+                    pseudoElement: "::view-transition-new(root)",
+                }
+            );
+        });
+    });
+
+    function toggleTheme() {
+        const isDark = html.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateThemeIcon();
+    }
+
+    // 初次渲染
+    render(apps);
 </script>
 
 </body>
