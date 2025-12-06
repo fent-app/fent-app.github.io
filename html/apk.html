@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>APK 收录 | 清单</title>
+
+<!-- 字体：简洁现代 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- 可选：Font Awesome 图标（用于小图标） -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+  :root{
+    --bg: #ffffff;
+    --card-bg: rgba(255,255,255,0.6);
+    --text: #0b0b0b;
+    --muted: #6b6b6b;
+    --accent: #000000;
+    --glass-border: rgba(0,0,0,0.06);
+    --radius: 14px;
+    --blur: 10px;
+    --shadow: 0 6px 18px rgba(12,12,12,0.06);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .wrap{
+    max-width:1100px;
+    margin:40px auto;
+    padding:28px;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+  }
+
+  .brand{
+    display:flex;
+    gap:14px;
+    align-items:center;
+  }
+
+  .logo{
+    width:56px;
+    height:56px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+    box-shadow: 0 4px 12px rgba(12,12,12,0.04);
+    border: 1px solid var(--glass-border);
+  }
+
+  .brand h1{
+    margin:0;
+    font-size:18px;
+    letter-spacing: -0.2px;
+  }
+  .brand p{ margin:0; color:var(--muted); font-size:13px; }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    border-radius:10px;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    border:1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+  }
+
+  .search-box input{
+    border:0;
+    outline:0;
+    background:transparent;
+    width:260px;
+    font-size:14px;
+    color:var(--text);
+  }
+
+  .select, .btn{
+    padding:10px 12px;
+    border-radius:10px;
+    background:transparent;
+    border:1px solid var(--glass-border);
+    cursor:pointer;
+    font-size:13px;
+  }
+
+  .btn.primary{
+    background:var(--accent);
+    color:#fff;
+    border: none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:600;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+  }
+
+  main{
+    margin-top:22px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+    gap:18px;
+  }
+
+  .card{
+    position:relative;
+    padding:16px;
+    border-radius:var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.55));
+    backdrop-filter: blur(var(--blur)) saturate(120%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+
+  .card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 18px 30px rgba(8,8,8,0.08);
+  }
+
+  .icon{
+    width:64px;
+    height:64px;
+    border-radius:12px;
+    flex:0 0 64px;
+    display:grid;
+    place-items:center;
+    background: rgba(0,0,0,0.03);
+    border:1px solid rgba(0,0,0,0.06);
+    overflow:hidden;
+  }
+
+  .icon img{ width:56px; height:56px; object-fit:cover; display:block; }
+
+  .info{
+    flex:1;
+    min-width:0;
+  }
+
+  .info h3{
+    margin:0 0 6px 0;
+    font-size:16px;
+    line-height:1.05;
+    font-weight:600;
+  }
+
+  .meta{
+    color:var(--muted);
+    font-size:13px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .desc{
+    margin-top:8px;
+    font-size:13px;
+    color:var(--muted);
+    display:block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-height:3.6em;
+  }
+
+  .actions{
+    margin-top:12px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .actions .btn.small{
+    padding:8px 10px;
+    font-size:13px;
+  }
+
+  footer{
+    margin-top:26px;
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+  }
+
+  /* 预览模态 */
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background: rgba(10,10,10,0.45);
+    z-index:1200;
+  }
+  .modal.open{ display:flex; }
+  .modal-card{
+    width:90%;
+    max-width:520px;
+    background:white;
+    border-radius:12px;
+    padding:18px;
+    box-shadow: 0 24px 60px rgba(10,10,10,0.35);
+    text-align:left;
+  }
+  .modal-card .row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .modal-card img{ width:84px; height:84px; border-radius:12px; object-fit:cover; }
+
+  /* 小屏优化 */
+  @media (max-width:600px){
+    .search-box input{ width:120px; }
+    .brand h1{ font-size:16px; }
+    .wrap{ padding:16px; margin:18px auto; }
+    .logo{ width:48px; height:48px; border-radius:10px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- Apple-like glyph: simple SVG -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M16.365 1.43c-.8.03-2.04.55-2.7 1.25-.59.62-1.1 1.67-.9 2.63 1.01.1 2.14-.5 2.78-1.29.6-.73 1.09-1.9.82-2.59z" fill="currentColor"/>
+            <path d="M11.98 4.6c-1.67 0-3.84 1.04-5.02 2.79-2.99 4.66-.78 11.58 2.32 15.37 1.54 1.77 3.34 3.74 5.68 3.67 2.17-.07 2.96-1.1 5.52-1.1 2.5 0 3.25 1.1 5.34 1.06 0 0 .12-1.86-.88-4.13-.93-2.1-2.7-3.96-4.83-5.33-1.07-.66-1.52-1.24-2.25-1.8-1.14-.88-2.24-1.62-3.88-1.62z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <h1>APK 收录</h1>
+          <p>本地 JSON 管理 · 黑白磨砂玻璃风</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="search-box" role="search" aria-label="搜索 APK">
+          <i class="fa fa-search" style="color:var(--muted)"></i>
+          <input id="search" type="search" placeholder="搜索名称、包名、版本..." />
+        </div>
+
+        <select id="sort" class="select" title="排序">
+          <option value="name">按 名称 A→Z</option>
+          <option value="name_desc">按 名称 Z→A</option>
+          <option value="size_desc">按 大小 降序</option>
+          <option value="size_asc">按 大小 升序</option>
+          <option value="date_desc">按 更新时间 新→旧</option>
+          <option value="date_asc">按 更新时间 旧→新</option>
+        </select>
+
+        <button id="loadExternal" class="btn" title="从外部 apks.json 加载（可选）">加载外部 JSON</button>
+        <button id="clear" class="btn" title="清空搜索">清除</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="grid" class="grid" aria-live="polite"></div>
+      <footer>将你的 APK 条目添加到页面中的 <code>apks</code> 数组或放入同目录下的 <code>apks.json</code>。</footer>
+    </main>
+  </div>
+
+  <!-- 预览模态 -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <strong id="m-title">预览</strong>
+        <button id="closeModal" class="btn" aria-label="关闭">关闭</button>
+      </div>
+      <div class="row" style="gap:14px;">
+        <img id="m-icon" src="" alt="图标预览">
+        <div>
+          <div id="m-meta" style="color:var(--muted);font-size:14px"></div>
+          <p id="m-desc" style="margin-top:8px;color:var(--muted)"></p>
+          <div style="margin-top:12px;">
+            <a id="m-download" class="btn primary" href="#" target="_blank" rel="noopener">下载 APK</a>
+            <button id="m-copy" class="btn small" style="margin-left:8px;">复制下载链接</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  数据说明（示例）
+  icon: 本地路径或网络 URL（建议放在同目录 images/xxx.png）
+  download_url: apk 文件可访问的 URL（或直接放到同目录）
+  size: 可选，字符串格式 "12.3 MB"
+  updated: 可选，ISO 日期 "2025-12-01"
+*/
+const apks = [
+  {
+    "id":"1",
+    "name":"示例应用 A",
+    "package":"com.example.appa",
+    "version":"1.2.0",
+    "size":"11.3 MB",
+    "icon":"images/appa.png",
+    "description":"这是示例应用 A 的简短描述，展示如何在卡片中显示信息。",
+    "download_url":"downloads/appa_v1.2.0.apk",
+    "updated":"2025-11-20"
+  },
+  {
+    "id":"2",
+    "name":"示例工具 B",
+    "package":"com.example.toolb",
+    "version":"2.0.1",
+    "size":"6.8 MB",
+    "icon":"images/toolb.png",
+    "description":"轻量工具，实用、简洁，适合示例展示用途。",
+    "download_url":"downloads/toolb_v2.0.1.apk",
+    "updated":"2025-10-12"
+  }
+  // 把你的条目直接 push 到这里，或使用外部 apks.json 加载
+];
+
+const grid = document.getElementById('grid');
+const searchInput = document.getElementById('search');
+const sortSelect = document.getElementById('sort');
+const loadExternal = document.getElementById('loadExternal');
+const clearBtn = document.getElementById('clear');
+
+function fmtDate(d){
+  if(!d) return '';
+  try{ return new Date(d).toLocaleDateString(); }catch(e){ return d; }
+}
+
+function sizeToBytes(sizeStr){
+  if(!sizeStr) return 0;
+  const r = /([\d.]+)\s*(kb|mb|gb|b)/i.exec(sizeStr);
+  if(!r) return 0;
+  const v = parseFloat(r[1]);
+  const u = r[2].toLowerCase();
+  switch(u){
+    case 'b': return v;
+    case 'kb': return v*1024;
+    case 'mb': return v*1024*1024;
+    case 'gb': return v*1024*1024*1024;
+    default: return v;
+  }
+}
+
+function render(list){
+  grid.innerHTML = '';
+  if(!list.length){
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:28px;border-radius:12px;background:linear-gradient(180deg,#fff,#fafafa);border:1px solid var(--glass-border);color:var(--muted);text-align:center">没有匹配结果</div>';
+    return;
+  }
+  list.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="icon" role="img" aria-label="${escapeHtml(item.name)} 图标">
+        <img loading="lazy" src="${escapeHtml(item.icon || '')}" alt="${escapeHtml(item.name)} 图标" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect width=%2264%22 height=%2264%22 fill=%22%23efefef%22/><text x=%2232%22 y=%2236%22 font-size=%2212%22 text-anchor=%22middle%22 fill=%22%23999%22>${encodeURIComponent('ICON')}</text></svg>'">
+      </div>
+      <div class="info">
+        <h3>${escapeHtml(item.name)} <span style="font-weight:400;color:var(--muted);font-size:13px">· ${escapeHtml(item.version || '')}</span></h3>
+        <div class="meta">
+          <div class="pkg">${escapeHtml(item.package || '')}</div>
+          <div>•</div>
+          <div>${escapeHtml(item.size || '')}</div>
+          <div>•</div>
+          <div>${fmtDate(item.updated)}</div>
+        </div>
+        <div class="desc">${escapeHtml(item.description || '')}</div>
+        <div class="actions">
+          <a class="btn small" href="${escapeHtml(item.download_url || '#')}" target="_blank" rel="noopener">下载</a>
+          <button class="btn small" data-id="${escapeHtml(item.id)}" onclick="preview('${escapeJs(item.id)}')">预览</button>
+          <button class="btn small" onclick="copyLink('${escapeJs(item.download_url || '')}')">复制链接</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(s){
+  if(!s) return '';
+  return String(s).replace(/[&<>"']/g, function(m){
+    return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m];
+  });
+}
+function escapeJs(s){
+  if(!s) return '';
+  return String(s).replace(/'/g, "\\'");
+}
+
+/* 预览逻辑 */
+const modal = document.getElementById('modal');
+const mTitle = document.getElementById('m-title');
+const mIcon = document.getElementById('m-icon');
+const mMeta = document.getElementById('m-meta');
+const mDesc = document.getElementById('m-desc');
+const mDownload = document.getElementById('m-download');
+const closeModal = document.getElementById('closeModal');
+
+function preview(id){
+  const item = apks.find(a => a.id == id);
+  if(!item) return;
+  mTitle.textContent = item.name;
+  mIcon.src = item.icon || '';
+  mMeta.textContent = `${item.package || ''} · ${item.version || ''} · ${item.size || ''} · ${fmtDate(item.updated)}`;
+  mDesc.textContent = item.description || '';
+  mDownload.href = item.download_url || '#';
+  mDownload.textContent = '下载 APK';
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+closeModal.addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+
+modal.addEventListener('click', (e)=>{
+  if(e.target === modal){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  }
+});
+
+/* 复制链接 */
+function copyLink(s){
+  if(!s) return alert('无下载链接');
+  navigator.clipboard?.writeText(s).then(()=> {
+    alert('已复制下载链接');
+  }).catch(()=> {
+    // 备用：创建输入框
+    const ta = document.createElement('textarea');
+    ta.value = s;
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); alert('已复制下载链接'); }catch(e){ alert('复制失败，请手动复制'); }
+    ta.remove();
+  });
+}
+
+/* 排序 / 搜索 */
+function applyFilters(){
+  const q = searchInput.value.trim().toLowerCase();
+  let list = apks.slice();
+
+  // 搜索
+  if(q){
+    list = list.filter(item => {
+      return (item.name || '').toLowerCase().includes(q)
+        || (item.package || '').toLowerCase().includes(q)
+        || (item.description || '').toLowerCase().includes(q)
+        || (item.version || '').toLowerCase().includes(q);
+    });
+  }
+
+  // 排序
+  const s = sortSelect.value;
+  list.sort((a,b)=>{
+    if(s === 'name'){
+      return (a.name||'').localeCompare(b.name||'');
+    } else if(s === 'name_desc'){
+      return (b.name||'').localeCompare(a.name||'');
+    } else if(s === 'size_asc'){
+      return sizeToBytes(a.size) - sizeToBytes(b.size);
+    } else if(s === 'size_desc'){
+      return sizeToBytes(b.size) - sizeToBytes(a.size);
+    } else if(s === 'date_asc'){
+      return new Date(a.updated || 0) - new Date(b.updated || 0);
+    } else if(s === 'date_desc'){
+      return new Date(b.updated || 0) - new Date(a.updated || 0);
+    }
+    return 0;
+  });
+
+  render(list);
+}
+
+/* 键入防抖 */
+let typingTimer = null;
+searchInput.addEventListener('input', ()=> {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(applyFilters, 180);
+});
+sortSelect.addEventListener('change', applyFilters);
+clearBtn.addEventListener('click', ()=>{ searchInput.value=''; applyFilters(); });
+
+/* 尝试加载外部 apks.json —— 用户可以在同目录放置 apks.json 来动态更新 */
+loadExternal.addEventListener('click', async ()=>{
+  try{
+    const resp = await fetch('apks.json', {cache:'no-store'});
+    if(!resp.ok) throw new Error('加载失败: ' + resp.status);
+    const data = await resp.json();
+    if(!Array.isArray(data)) throw new Error('apks.json 必须是数组');
+    // 清空并替换
+    apks.length = 0;
+    data.forEach(d => apks.push(d));
+    applyFilters();
+    alert('已从 apks.json 加载 ' + apks.length + ' 条记录');
+  }catch(err){
+    alert('加载外部 JSON 失败：' + err.message);
+  }
+});
+
+/* 初始化 */
+applyFilters();
+
+/* 简洁的安全辅助：避免 XSS（在较复杂项目请使用更成熟的 sanitizer） */
+function safeUrl(u){
+  if(!u) return '';
+  try{
+    const url = new URL(u, location.origin);
+    return url.href;
+  }catch(e){
+    return '';
+  }
+}
+</script>
+</body>
+</html>
