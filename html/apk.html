@@ -1,303 +1,275 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-cn">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>秋秋精选APK</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>APK 收录页面</title>
 
 <style>
-:root{
-  --bg: #ffffff;
-  --card-bg: rgba(255,255,255,0.55);
-  --text: #0b0b0b;
-  --muted: #6b6b6b;
-  --accent: #000000;
-  --glass-border: rgba(0,0,0,0.08);
-  --radius: 18px;
-  --blur: 16px;
-  --shadow: 0 8px 28px rgba(0,0,0,0.08);
-  font-family: "Inter", system-ui;
-}
+    /* ====== 全局风格 ====== */
+    body {
+        margin: 0;
+        padding: 0;
+        background: #f5f5f7; /* 类苹果白 */
+        color: #000;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-html,body{
-  margin:0;
-  background:#ffffff;
-  color:var(--text);
-}
+    /* ====== 顶栏 ====== */
+    header {
+        position: sticky;
+        top: 0;
+        padding: 16px;
+        background: rgba(255,255,255,0.55);
+        backdrop-filter: blur(25px);
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        z-index: 1000;
+    }
 
-.wrap{
-  max-width:900px;
-  margin:32px auto;
-  padding:18px;
-}
+    #search, #sort {
+        width: 100%;
+        padding: 12px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.6);
+        border: 1px solid rgba(0,0,0,0.15);
+        margin-bottom: 10px;
+        font-size: 16px;
+        backdrop-filter: blur(10px);
+        outline: none;
+        transition: 0.2s;
+    }
 
-header{
-  margin-bottom:18px;
-}
+    #search:focus, #sort:focus {
+        border-color: #000;
+    }
 
-header h1{
-  margin:0;
-  font-size:26px;
-  font-weight:700;
-}
+    /* ====== 主容器 ====== */
+    .container {
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+        justify-content: center;
+    }
 
-header p{
-  margin:4px 0 0 0;
-  color:var(--muted);
-  font-size:14px;
-}
+    /* ====== 应用卡片 ====== */
+    .card {
+        width: 100%;
+        max-width: 480px;
+        padding: 20px;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.68);
+        backdrop-filter: blur(30px);
+        box-shadow: 
+            0 4px 20px rgba(0,0,0,0.08),
+            0 1px 3px rgba(0,0,0,0.06);
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: 0.25s;
+    }
 
-.search-box{
-  margin-top:14px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 16px;
-  border-radius:var(--radius);
-  background:var(--card-bg);
-  backdrop-filter: blur(var(--blur));
-  border:1px solid var(--glass-border);
-}
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 8px 26px rgba(0,0,0,0.12),
+            0 2px 6px rgba(0,0,0,0.1);
+    }
 
-.search-box input{
-  border:0;
-  outline:0;
-  background:transparent;
-  flex:1;
-  font-size:15px;
-}
+    /* ====== 图标 ====== */
+    .icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        object-fit: cover;
+        background: #ececec;
+        flex-shrink: 0;
+    }
 
-.grid{
-  margin-top:20px;
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-  gap:20px;
-}
+    /* ====== 文案部分 ====== */
+    .info h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+    }
 
-/* 移动端卡片：占满整行 */
-@media (max-width:700px){
-  .grid{
-    grid-template-columns:1fr !important;
-  }
-}
+    .desc {
+        margin: 0 0 14px;
+        font-size: 15px;
+        color: #444;
+    }
 
-.card{
-  display:flex;
-  gap:16px;
-  padding:18px;
-  background:var(--card-bg);
-  backdrop-filter: blur(var(--blur));
-  border-radius:var(--radius);
-  border:1px solid var(--glass-border);
-  box-shadow:var(--shadow);
-  transition:transform .2s ease;
-}
+    /* ====== 下载按钮 ====== */
+    .download-btn {
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.2s;
+    }
 
-.card:hover{
-  transform:translateY(-4px);
-}
+    .download-btn:hover {
+        opacity: 0.75;
+    }
 
-.icon{
-  width:70px;
-  height:70px;
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid rgba(0,0,0,0.08);
-  flex-shrink:0;
-}
-.icon img{
-  width:100%; height:100%; display:block;
-}
+    /* ====== PC 多列 ====== */
+    @media (min-width: 768px) {
+        .card {
+            width: calc(33% - 40px);
+        }
+    }
 
-.info h3{
-  margin:0;
-  font-size:17px;
-  font-weight:600;
-}
+    /* ====== 分页 ====== */
+    .pagination {
+        text-align: center;
+        padding: 25px 0;
+        font-size: 16px;
+    }
 
-.meta{
-  margin-top:4px;
-  font-size:13px;
-  color:var(--muted);
-}
+    .pagination button {
+        padding: 10px 18px;
+        border-radius: 12px;
+        border: none;
+        background: #000;
+        color: #fff;
+        cursor: pointer;
+        transition: .2s;
+    }
 
-.desc{
-  margin-top:6px;
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.4;
-}
+    .pagination button:hover {
+        opacity: 0.75;
+    }
 
-.actions{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-}
-
-/* 高级 iOS 风下载按钮 */
-.btn-download{
-  padding:10px 18px;
-  background:black;
-  color:white;
-  border-radius:12px;
-  border:none;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 6px 18px rgba(0,0,0,0.18);
-  transition:opacity .2s;
-}
-.btn-download:hover{
-  opacity:0.8;
-}
-
-/* 次按钮 */
-.btn2{
-  padding:10px 14px;
-  font-size:13px;
-  border-radius:10px;
-  border:1px solid var(--glass-border);
-  background:transparent;
-  cursor:pointer;
-}
-
-footer{
-  margin-top:28px;
-  text-align:center;
-  font-size:13px;
-  color:var(--muted);
-}
-
-/* 预览模态 */
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,0.45);
-  z-index:500;
-}
-.modal.open{
-  display:flex;
-}
-.modal-card{
-  background:white;
-  width:90%;
-  max-width:500px;
-  padding:18px;
-  border-radius:16px;
-  box-shadow:0 18px 40px rgba(0,0,0,0.25);
-}
-.modal-card img{
-  width:100px; height:100px; border-radius:16px;
-}
+    .pagination button:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
 </style>
 </head>
+
 <body>
 
-<div class="wrap">
-  <header>
-    <h1>秋秋APK收录</h1>
+<header>
+    <input id="search" placeholder="搜索名称 / 简介 / 拼音..." />
+    <select id="sort">
+        <option value="default">排序：默认</option>
+        <option value="name">按名称（A-Z）</option>
+        <option value="desc">按简介（A-Z）</option>
+    </select>
+</header>
 
-    <div class="search-box">
-      <i class="fa fa-search" style="color:var(--muted)"></i>
-      <input id="search" type="search" placeholder="搜索名称、包名...">
-    </div>
-  </header>
+<div class="container" id="appList"></div>
 
-  <main>
-    <div id="grid" class="grid"></div>
-    <footer>在 apks 内添加你的应用信息即可显示。</footer>
-  </main>
-</div>
-
-<!-- 预览 -->
-<div id="modal" class="modal">
-  <div class="modal-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong id="m-title"></strong>
-      <button id="m-close" class="btn2">关闭</button>
-    </div>
-    <div style="display:flex;margin-top:14px;gap:14px;">
-      <img id="m-icon" src="">
-      <div>
-        <div id="m-meta" style="font-size:13px;color:var(--muted);"></div>
-        <p id="m-desc" style="margin-top:8px;color:var(--muted);font-size:13px;"></p>
-        <a id="m-download" class="btn-download" href="#" target="_blank">下载 APK</a>
-      </div>
-    </div>
-  </div>
+<div class="pagination">
+    <button id="prevBtn">上一页</button>
+    <span id="pageInfo"></span>
+    <button id="nextBtn">下一页</button>
 </div>
 
 <script>
-const apks = [
-  {
-    id:"1",
-    name:"示例应用 A",
-    package:"com.example.appa",
-    version:"1.2.0",
-    size:"11.3 MB",
-    icon:"images/appa.png",
-    description:"这是一个示例卡片，所有 APK 都按这种方式展示。",
-    download_url:"downloads/appa_v1.2.0.apk",
-    updated:"2025-10-02"
-  }
+/* ====== 你的应用数据（随便加） ====== */
+const apps = [
+    {
+        name: "示例应用 A",
+        desc: "简洁工具，极低占用。",
+        icon: "https://img.icons8.com/ios-filled/100/000000/app-symbol.png",
+        link: "https://example.com/a.apk"
+    },
+    {
+        name: "黑白播放器",
+        desc: "苹果风无广告播放器。",
+        icon: "https://img.icons8.com/ios-filled/100/000000/play-button-circled.png",
+        link: "https://example.com/b.apk"
+    },
+    {
+        name: "系统工具箱",
+        desc: "多功能合集，功能丰富。",
+        icon: "https://img.icons8.com/ios-filled/100/000000/toolbox.png",
+        link: "https://example.com/c.apk"
+    }
 ];
 
-const grid=document.getElementById('grid');
-const search=document.getElementById('search');
+/* ====== 拼音（极简 fakePinyin） ====== */
+function toPinyin(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+}
 
-function render(list){
-  grid.innerHTML='';
-  list.forEach(app=>{
-    const el=document.createElement('div');
-    el.className='card';
-    el.innerHTML=`
-      <div class="icon"><img src="${app.icon}" /></div>
-      <div class="info">
-        <h3>${app.name}</h3>
-        <div class="meta">${app.package} · ${app.version} · ${app.size}</div>
-        <div class="desc">${app.description}</div>
-        <div class="actions">
-          <a class="btn-download" href="${app.download_url}" target="_blank">下载</a>
-          <button class="btn2" onclick="preview('${app.id}')">预览</button>
+/* ====== 搜索（模糊 / 拼音） ====== */
+function fuzzyMatch(app, key) {
+    key = key.toLowerCase();
+    return (
+        app.name.includes(key) ||
+        app.desc.includes(key) ||
+        toPinyin(app.name).includes(key) ||
+        toPinyin(app.desc).includes(key)
+    );
+}
+
+/* ====== 状态 ====== */
+let filtered = [...apps];
+let currentPage = 1;
+const pageSize = 5;
+
+/* ====== 渲染函数 ====== */
+function render() {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    const list = document.getElementById("appList");
+
+    list.innerHTML = "";
+    filtered.slice(start, end).forEach(app => {
+        list.innerHTML += `
+        <div class="card">
+            <img class="icon" src="${app.icon}" />
+            <div class="info">
+                <h3>${app.name}</h3>
+                <p class="desc">${app.desc}</p>
+                <a href="${app.link}" class="download-btn" download>下载</a>
+            </div>
         </div>
-      </div>
-    `;
-    grid.appendChild(el);
-  });
+        `;
+    });
+
+    const total = Math.ceil(filtered.length / pageSize);
+    document.getElementById("pageInfo").textContent = `第 ${currentPage} / ${total} 页`;
+
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage >= total;
 }
 
-function preview(id){
-  const app=apks.find(x=>x.id==id);
-  if(!app) return;
-  document.getElementById('m-title').textContent=app.name;
-  document.getElementById('m-icon').src=app.icon;
-  document.getElementById('m-meta').textContent=`${app.package} · ${app.version} · ${app.size}`;
-  document.getElementById('m-desc').textContent=app.description;
-  document.getElementById('m-download').href=app.download_url;
-  document.getElementById('modal').classList.add('open');
-}
+/* ====== 搜索事件 ====== */
+document.getElementById("search").addEventListener("input", e => {
+    const key = e.target.value.trim();
+    currentPage = 1;
+    filtered = apps.filter(app => fuzzyMatch(app, key));
+    render();
+});
 
-document.getElementById('m-close').onclick=()=>document.getElementById('modal').classList.remove('open');
-document.getElementById('modal').onclick=e=>{ if(e.target.id==='modal') document.getElementById('modal').classList.remove('open'); };
+/* ====== 排序事件 ====== */
+document.getElementById("sort").addEventListener("change", e => {
+    const type = e.target.value;
 
-search.oninput=()=>{
-  const q=search.value.trim().toLowerCase();
-  const list=apks.filter(a =>
-    a.name.toLowerCase().includes(q) ||
-    a.package.toLowerCase().includes(q)
-  );
-  render(list);
-};
+    if (type === "name") {
+        filtered.sort((a,b)=> a.name.localeCompare(b.name));
+    } else if (type === "desc") {
+        filtered.sort((a,b)=> a.desc.localeCompare(b.desc));
+    } else {
+        filtered = [...apps];
+    }
+    currentPage = 1;
+    render();
+});
 
-render(apks);
+/* ====== 分页 ====== */
+document.getElementById("prevBtn").onclick = () => { currentPage--; render(); };
+document.getElementById("nextBtn").onclick = () => { currentPage++; render(); };
+
+render();
 </script>
 
 </body>
