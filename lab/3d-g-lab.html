@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维度 · 奇点 | 3D Interactive Core</title>
+    <style>
+        /* --- 基础样式 setup --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050505; /* 深邃黑背景 */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* --- 画布容器 --- */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* --- UI 覆盖层 (玻璃拟态) --- */
+        .ui-overlay {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            z-index: 2;
+            color: white;
+            pointer-events: none; /* 让鼠标事件穿透到 3D 层 */
+            max-width: 500px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 242, 0.1);
+            border-color: rgba(0, 255, 242, 0.3);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #fff 0%, #00fff2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #aaa;
+            margin: 0 0 20px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #cfcfcf;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: #00fff2;
+            border: 1px solid #00fff2;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #00fff2;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 242, 0.4);
+        }
+
+        /* --- 右下角装饰 --- */
+        .status {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            z-index: 2;
+            color: rgba(255,255,255,0.3);
+            font-family: monospace;
+            font-size: 0.8rem;
+            text-align: right;
+        }
+        
+        .status span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .ui-overlay {
+                left: 5%;
+                right: 5%;
+                width: auto;
+                bottom: 5%;
+                top: auto;
+                transform: none;
+            }
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div class="ui-overlay">
+        <div class="glass-card">
+            <h2>Interactive WebGL</h2>
+            <h1>维度 · 奇点</h1>
+            <p>
+                这是一个由数学与代码构建的数字雕塑。
+                <br>
+                外层是不断重构的几何框架，内层是永恒律动的能量核心。
+                移动鼠标，探索这片静谧的虚拟视界。
+            </p>
+            <a href="#" class="btn" onclick="animateCamera()">启动跃迁引擎</a>
+        </div>
+    </div>
+
+    <div class="status">
+        <span>SYSTEM: ONLINE</span>
+        <span>RENDER: THREE.JS</span>
+        <span>FPS: 60</span>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://unpkg.com/three@0.128.0/build/three.module.js';
+
+        // 1. 场景初始化
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        // 添加迷雾效果，让远处的粒子淡出，增加深邃感
+        scene.fog = new THREE.FogExp2(0x050505, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // 2. 创建核心物体
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
+
+        // A. 内部核心：发光的实体多面体
+        const innerGeo = new THREE.IcosahedronGeometry(1, 1);
+        const innerMat = new THREE.MeshStandardMaterial({
+            color: 0x220033,
+            roughness: 0.2,
+            metalness: 0.8,
+            emissive: 0x6600ff,
+            emissiveIntensity: 0.8,
+            flatShading: true
+        });
+        const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+        coreGroup.add(innerMesh);
+
+        // B. 外部框架：线框结构
+        const outerGeo = new THREE.IcosahedronGeometry(1.4, 0);
+        const outerMat = new THREE.MeshBasicMaterial({
+            color: 0x00fff2,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        const outerMesh = new THREE.Mesh(outerGeo, outerMat);
+        coreGroup.add(outerMesh);
+
+        // C. 轨道环：使用 Torus 几何体
+        const ringGeo = new THREE.TorusGeometry(2.2, 0.02, 16, 100);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.rotation.y = -0.3;
+        coreGroup.add(ring);
+
+        // 3. 创建背景粒子场 (星空)
+        const particlesGeo = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // 随机分布在 -10 到 10 的空间内
+            posArray[i] = (Math.random() - 0.5) * 30;
+        }
+
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMat = new THREE.PointsMaterial({
+            size: 0.03,
+            color: 0x00fff2,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending // 叠加混合，产生发光感
+        });
+        const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+        scene.add(particlesMesh);
+
+        // 4. 灯光系统
+        const ambientLight = new THREE.AmbientLight(0x404040); // 柔和环境光
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0x00fff2, 2, 50);
+        pointLight1.position.set(5, 3, 5);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xff00cc, 2, 50);
+        pointLight2.position.set(-5, -3, 5);
+        scene.add(pointLight2);
+
+        // 5. 交互逻辑 (鼠标跟随)
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        // 按钮点击动画
+        window.animateCamera = function() {
+            const startZ = camera.position.z;
+            let speed = 0.1;
+            
+            // 简单的冲刺效果逻辑
+            const zoomIn = setInterval(() => {
+                camera.position.z -= speed;
+                speed += 0.01;
+                if(camera.position.z < 2) {
+                    clearInterval(zoomIn);
+                    camera.position.z = 5; // 重置
+                }
+            }, 16);
+        };
+
+        // 6. 动画循环
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // 核心自转
+            innerMesh.rotation.y += 0.005;
+            innerMesh.rotation.z += 0.003;
+
+            outerMesh.rotation.y -= 0.005; // 反向旋转
+            outerMesh.rotation.x += 0.002;
+
+            // 核心呼吸效果 (缩放)
+            const scale = 1 + Math.sin(elapsedTime * 1.5) * 0.05;
+            innerMesh.scale.set(scale, scale, scale);
+
+            // 粒子场缓慢旋转
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = elapsedTime * 0.02;
+
+            // 鼠标交互平滑过渡 (Lerp)
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+
+            coreGroup.rotation.y += 0.05 * (targetX - coreGroup.rotation.y);
+            coreGroup.rotation.x += 0.05 * (targetY - coreGroup.rotation.x);
+            
+            // 摄像机视差微动
+            camera.position.x += (mouseX * 0.005 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 0.005 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // 窗口大小自适应
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
