@@ -3,148 +3,250 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>APK 收录页面</title>
+<title>APK 收录 - 极简风格</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* ====== 全局风格 ====== */
+    /* ====== CSS 变量系统 (核心：通过变量实现一键换肤) ====== */
+    :root {
+        /* 亮色模式 (Apple Light) */
+        --bg-color: #f5f5f7;
+        --header-bg: rgba(255, 255, 255, 0.7);
+        --card-bg: rgba(255, 255, 255, 0.65);
+        --text-main: #1d1d1f;
+        --text-sub: #86868b;
+        --border-color: rgba(0, 0, 0, 0.08);
+        --accent-color: #007aff; /* Apple Blue */
+        --btn-text: #fff;
+        --btn-bg: #1d1d1f;
+        --btn-hover: #333;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    body.dark {
+        /* 暗色模式 (Telegram/Apple Dark) */
+        --bg-color: #1c1c1e; /* 深灰黑 */
+        --header-bg: rgba(28, 28, 30, 0.7);
+        --card-bg: rgba(44, 44, 46, 0.7);
+        --text-main: #f5f5f7;
+        --text-sub: #a1a1a6;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --accent-color: #0a84ff;
+        --btn-text: #000;
+        --btn-bg: #fff;
+        --btn-hover: #e5e5e5;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ====== 全局基础 ====== */
     body {
         margin: 0;
         padding: 0;
-        background: #f5f5f7; /* 类苹果白 */
-        color: #000;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease; /* 丝滑切换动画 */
     }
 
     /* ====== 顶栏 ====== */
     header {
         position: sticky;
         top: 0;
-        padding: 16px;
-        background: rgba(255,255,255,0.55);
-        backdrop-filter: blur(25px);
-        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 16px 20px;
+        background: var(--header-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-color);
         z-index: 1000;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        transition: background 0.3s ease, border 0.3s ease;
     }
 
-    #search, #sort {
-        width: 100%;
-        padding: 12px;
-        border-radius: 14px;
-        background: rgba(255,255,255,0.6);
-        border: 1px solid rgba(0,0,0,0.15);
-        margin-bottom: 10px;
-        font-size: 16px;
-        backdrop-filter: blur(10px);
+    .header-controls {
+        display: flex;
+        gap: 10px;
+        flex: 1;
+        min-width: 280px;
+    }
+
+    input, select {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-size: 14px;
         outline: none;
         transition: 0.2s;
     }
-
-    #search:focus, #sort:focus {
-        border-color: #000;
+    
+    #search { flex: 2; }
+    #sort { flex: 1; }
+    
+    input:focus, select:focus {
+        border-color: var(--accent-color);
     }
 
-    /* ====== 主容器 ====== */
-    .container {
-        padding: 20px;
+    /* 主题切换按钮 */
+    #themeToggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: var(--card-bg);
+        color: var(--text-main);
+        cursor: pointer;
+        font-size: 20px;
         display: flex;
-        flex-wrap: wrap;
-        gap: 22px;
+        align-items: center;
         justify-content: center;
+        transition: 0.3s;
+    }
+    #themeToggle:hover { transform: scale(1.1); }
+
+    /* ====== 内容区 ====== */
+    .container {
+        padding: 30px 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
-    /* ====== 应用卡片 ====== */
+    /* ====== 卡片设计 ====== */
     .card {
-        width: 100%;
-        max-width: 480px;
-        padding: 20px;
-        border-radius: 24px;
-        background: rgba(255,255,255,0.68);
+        padding: 24px;
+        border-radius: 22px;
+        background: var(--card-bg);
         backdrop-filter: blur(30px);
-        box-shadow: 
-            0 4px 20px rgba(0,0,0,0.08),
-            0 1px 3px rgba(0,0,0,0.06);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
         display: flex;
-        align-items: flex-start;
+        flex-direction: column;
         gap: 16px;
-        transition: 0.25s;
+        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
 
     .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 
-            0 8px 26px rgba(0,0,0,0.12),
-            0 2px 6px rgba(0,0,0,0.1);
+        transform: translateY(-4px);
     }
 
-    /* ====== 图标 ====== */
+    .card-top {
+        display: flex;
+        gap: 16px;
+    }
+
     .icon {
         width: 72px;
         height: 72px;
-        border-radius: 20px;
+        border-radius: 18px;
         object-fit: cover;
-        background: #ececec;
+        background: #e1e1e1;
         flex-shrink: 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* ====== 文案部分 ====== */
+    .info { flex: 1; }
+
     .info h3 {
-        margin: 0 0 8px;
-        font-size: 18px;
+        margin: 0 0 4px;
+        font-size: 17px;
         font-weight: 600;
+        color: var(--text-main);
     }
 
     .desc {
-        margin: 0 0 14px;
-        font-size: 15px;
-        color: #444;
+        margin: 0 0 8px;
+        font-size: 14px;
+        color: var(--text-sub);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    /* ====== 下载按钮 ====== */
-    .download-btn {
-        padding: 10px 20px;
-        background: #000;
-        color: #fff;
-        border-radius: 50px;
+    /* 时间标签 */
+    .meta-time {
+        font-size: 12px;
+        color: var(--text-sub);
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* ====== 按钮组 ====== */
+    .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: auto; /* 推到底部 */
+    }
+
+    .btn {
+        flex: 1;
+        padding: 10px 0;
+        border-radius: 10px;
+        text-align: center;
         text-decoration: none;
         font-size: 14px;
+        font-weight: 500;
         transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
     }
 
-    .download-btn:hover {
-        opacity: 0.75;
+    /* 主按钮 */
+    .btn-primary {
+        background: var(--btn-bg);
+        color: var(--btn-text);
     }
+    .btn-primary:hover { opacity: 0.9; transform: scale(0.98); }
 
-    /* ====== PC 多列 ====== */
-    @media (min-width: 768px) {
-        .card {
-            width: calc(33% - 40px);
-        }
+    /* 次要按钮 (二号链接) */
+    .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
     }
+    .btn-secondary:hover { background: rgba(125,125,125,0.1); }
 
     /* ====== 分页 ====== */
     .pagination {
-        text-align: center;
-        padding: 25px 0;
-        font-size: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        padding: 40px 0;
+        color: var(--text-main);
     }
 
     .pagination button {
-        padding: 10px 18px;
-        border-radius: 12px;
-        border: none;
-        background: #000;
-        color: #fff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg);
+        color: var(--text-main);
         cursor: pointer;
-        transition: .2s;
+        transition: 0.2s;
     }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pagination button:hover:not(:disabled) { background: var(--border-color); }
 
-    .pagination button:hover {
-        opacity: 0.75;
-    }
-
-    .pagination button:disabled {
-        background: #aaa;
-        cursor: not-allowed;
+    @media (max-width: 600px) {
+        .header-controls { order: 2; width: 100%; }
+        #themeToggle { order: 1; margin-left: auto; }
+        .card { padding: 20px; }
     }
 </style>
 </head>
@@ -152,97 +254,158 @@
 <body>
 
 <header>
-    <input id="search" placeholder="搜索名称 / 简介 / 拼音..." />
-    <select id="sort">
-        <option value="default">排序：默认</option>
-        <option value="name">按名称（A-Z）</option>
-        <option value="desc">按简介（A-Z）</option>
-    </select>
+    <div class="header-controls">
+        <input id="search" placeholder="&#xf002; 搜索应用..." style="font-family: 'Font Awesome 6 Free', sans-serif;" />
+        <select id="sort">
+            <option value="default">默认排序</option>
+            <option value="time">按时间 (新→旧)</option>
+            <option value="name">按名称 (A-Z)</option>
+        </select>
+    </div>
+    <button id="themeToggle" title="切换模式">
+        <i class="fas fa-moon"></i>
+    </button>
 </header>
 
 <div class="container" id="appList"></div>
 
 <div class="pagination">
-    <button id="prevBtn">上一页</button>
-    <span id="pageInfo"></span>
-    <button id="nextBtn">下一页</button>
+    <button id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextBtn"><i class="fas fa-chevron-right"></i></button>
 </div>
 
 <script>
-/* ====== 你的应用数据（随便加） ====== */
+/* ====== 你的应用数据 ====== */
+/* 字段说明：
+   name: 应用名称
+   desc: 简介
+   icon: 图标URL
+   time: 更新时间 (字符串)
+   link: 主下载链接
+   link2: (可选) 备用链接，如果没有请设为 null 或 ""
+*/
 const apps = [
     {
-        name: "示例应用 A",
-        desc: "简洁工具，极低占用。",
-        icon: "https://img.icons8.com/ios-filled/100/000000/app-symbol.png",
-        link: "https://example.com/a.apk"
+        name: "Telegram X",
+        desc: "速度极快的第三方客户端，流畅动画。",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1024px-Telegram_logo.svg.png",
+        time: "2023-10-05",
+        link: "#",
+        link2: "https://example.com/mirror/tgx.apk"
     },
     {
-        name: "黑白播放器",
-        desc: "苹果风无广告播放器。",
-        icon: "https://img.icons8.com/ios-filled/100/000000/play-button-circled.png",
-        link: "https://example.com/b.apk"
+        name: "Spotify Mod",
+        desc: "解锁部分高级功能，无广告听歌。",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1024px-Spotify_logo_without_text.svg.png",
+        time: "2023-11-20",
+        link: "#",
+        link2: null // 没有备用链接
     },
     {
-        name: "系统工具箱",
-        desc: "多功能合集，功能丰富。",
-        icon: "https://img.icons8.com/ios-filled/100/000000/toolbox.png",
-        link: "https://example.com/c.apk"
+        name: "VSCO 滤镜全开",
+        desc: "摄影师必备，模拟胶片质感。",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/3/32/VSCO_Seal.svg",
+        time: "2023-09-12",
+        link: "#",
+        link2: ""
+    },
+    {
+        name: "网易云音乐概念版",
+        desc: "极简设计，专注听歌体验。",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Netease_Cloud_Music_logo.svg/1024px-Netease_Cloud_Music_logo.svg.png",
+        time: "2024-01-15",
+        link: "#",
+        link2: "#"
+    },
+    {
+        name: "Chrome Beta",
+        desc: "体验谷歌浏览器最新特性。",
+        icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Google_Chrome_icon_%28February_2022%29.svg/1024px-Google_Chrome_icon_%28February_2022%29.svg.png",
+        time: "2024-02-01",
+        link: "#",
+        link2: null
     }
 ];
 
-/* ====== 拼音（极简 fakePinyin） ====== */
+/* ====== 拼音工具 (简易版) ====== */
 function toPinyin(str) {
-    return str
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-/* ====== 搜索（模糊 / 拼音） ====== */
-function fuzzyMatch(app, key) {
-    key = key.toLowerCase();
-    return (
-        app.name.includes(key) ||
-        app.desc.includes(key) ||
-        toPinyin(app.name).includes(key) ||
-        toPinyin(app.desc).includes(key)
-    );
-}
-
-/* ====== 状态 ====== */
+/* ====== 状态管理 ====== */
 let filtered = [...apps];
 let currentPage = 1;
-const pageSize = 5;
+const pageSize = 9; // PC端每页多显示一点
 
-/* ====== 渲染函数 ====== */
+/* ====== 渲染核心 ====== */
 function render() {
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
     const list = document.getElementById("appList");
-
     list.innerHTML = "";
-    filtered.slice(start, end).forEach(app => {
+
+    const currentData = filtered.slice(start, end);
+
+    if (currentData.length === 0) {
+        list.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-sub); padding:40px;">未找到相关应用</div>`;
+        document.getElementById("pageInfo").textContent = "0 / 0";
+        return;
+    }
+
+    currentData.forEach(app => {
+        // 检查是否有二号链接
+        const hasLink2 = app.link2 && app.link2.trim() !== "";
+        
+        // 动态生成二号按钮 HTML
+        const link2HTML = hasLink2 
+            ? `<a href="${app.link2}" class="btn btn-secondary" title="备用下载" download>
+                 <i class="fas fa-link"></i> 备用
+               </a>` 
+            : "";
+
+        // 根据是否有二号链接调整主按钮样式（如果只有1个按钮，让它宽一点）
+        const link1Style = ""; 
+
         list.innerHTML += `
         <div class="card">
-            <img class="icon" src="${app.icon}" />
-            <div class="info">
-                <h3>${app.name}</h3>
-                <p class="desc">${app.desc}</p>
-                <a href="${app.link}" class="download-btn" download>下载</a>
+            <div class="card-top">
+                <img class="icon" src="${app.icon}" loading="lazy" />
+                <div class="info">
+                    <h3>${app.name}</h3>
+                    <div class="meta-time">
+                        <i class="far fa-clock"></i> ${app.time}
+                    </div>
+                    <p class="desc">${app.desc}</p>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="${app.link}" class="btn btn-primary" ${link1Style} download>
+                    <i class="fas fa-download"></i> 获取
+                </a>
+                ${link2HTML}
             </div>
         </div>
         `;
     });
 
     const total = Math.ceil(filtered.length / pageSize);
-    document.getElementById("pageInfo").textContent = `第 ${currentPage} / ${total} 页`;
-
+    document.getElementById("pageInfo").textContent = `${currentPage} / ${total}`;
     document.getElementById("prevBtn").disabled = currentPage === 1;
-    document.getElementById("nextBtn").disabled = currentPage >= total;
+    document.getElementById("nextBtn").disabled = currentPage >= total || total === 0;
 }
 
-/* ====== 搜索事件 ====== */
+/* ====== 逻辑控制 ====== */
+// 1. 搜索
+function fuzzyMatch(app, key) {
+    key = key.toLowerCase();
+    return (
+        app.name.toLowerCase().includes(key) ||
+        app.desc.toLowerCase().includes(key) ||
+        toPinyin(app.name).includes(key)
+    );
+}
+
 document.getElementById("search").addEventListener("input", e => {
     const key = e.target.value.trim();
     currentPage = 1;
@@ -250,25 +413,51 @@ document.getElementById("search").addEventListener("input", e => {
     render();
 });
 
-/* ====== 排序事件 ====== */
+// 2. 排序
 document.getElementById("sort").addEventListener("change", e => {
     const type = e.target.value;
-
     if (type === "name") {
-        filtered.sort((a,b)=> a.name.localeCompare(b.name));
-    } else if (type === "desc") {
-        filtered.sort((a,b)=> a.desc.localeCompare(b.desc));
+        filtered.sort((a,b) => a.name.localeCompare(b.name, 'zh'));
+    } else if (type === "time") {
+        filtered.sort((a,b) => new Date(b.time) - new Date(a.time));
     } else {
-        filtered = [...apps];
+        filtered = [...apps]; // 恢复默认顺序需要原始ID，这里简化为重置
     }
     currentPage = 1;
     render();
 });
 
-/* ====== 分页 ====== */
+// 3. 分页
 document.getElementById("prevBtn").onclick = () => { currentPage--; render(); };
 document.getElementById("nextBtn").onclick = () => { currentPage++; render(); };
 
+// 4. 暗黑模式切换 logic
+const themeToggle = document.getElementById("themeToggle");
+const body = document.body;
+const icon = themeToggle.querySelector("i");
+
+// 初始化：检查本地存储或系统偏好
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    body.classList.add("dark");
+    icon.classList.replace("fa-moon", "fa-sun");
+}
+
+themeToggle.addEventListener("click", () => {
+    body.classList.toggle("dark");
+    const isDark = body.classList.contains("dark");
+    
+    // 切换图标
+    if (isDark) {
+        icon.classList.replace("fa-moon", "fa-sun");
+        localStorage.setItem("theme", "dark");
+    } else {
+        icon.classList.replace("fa-sun", "fa-moon");
+        localStorage.setItem("theme", "light");
+    }
+});
+
+// 初次渲染
 render();
 </script>
 
