@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>币价雷达 - 隐私政策</title>
+    <script src="https://shuoweb.com/common.js"></script>
+    <style>
+        /* 隐私政策专用补充样式 */
+        .pp-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+        .pp-updated {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .pp-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .pp-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pp-section h2 .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .pp-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: var(--primary);
+        }
+        .pp-section p {
+            color: var(--text-main);
+            font-size: 15px;
+            line-height: 1.8;
+            margin: 8px 0;
+        }
+        .pp-section ul {
+            margin: 10px 0;
+            padding-left: 8px;
+            list-style: none;
+        }
+        .pp-section ul li {
+            position: relative;
+            padding-left: 24px;
+            margin: 10px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-main);
+        }
+        .pp-section ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+        .pp-section ul li ul {
+            margin: 8px 0 4px 0;
+        }
+        .pp-section ul li ul li::before {
+            background: var(--text-sub);
+            width: 6px;
+            height: 6px;
+            top: 11px;
+        }
+        .pp-highlight {
+            background: var(--primary-light);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-left: 4px solid var(--primary);
+        }
+        .pp-highlight p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+        .pp-table-wrap {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: var(--radius);
+        }
+        .pp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 500px;
+        }
+        .pp-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .pp-table th:first-child { border-radius: 12px 0 0 0; }
+        .pp-table th:last-child { border-radius: 0 12px 0 0; }
+        .pp-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            color: var(--text-main);
+        }
+        .pp-table tr:last-child td { border-bottom: none; }
+        .pp-table tr:nth-child(even) td {
+            background: rgba(0,0,0,0.02);
+        }
+        .pp-contact-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+        .pp-contact-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .pp-contact-info p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+        .pp-contact-info .label {
+            color: var(--text-sub);
+            font-size: 12px;
+        }
+        .pp-contact-info .value {
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .pp-footer-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .pp-section { padding: 20px 16px; }
+            .pp-section h2 { font-size: 17px; }
+            .pp-section p, .pp-section ul li { font-size: 14px; }
+            .pp-table { font-size: 13px; }
+            .pp-table th, .pp-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header>
+    <div class="logo">币价雷达 · 隐私政策</div>
+    <button class="theme-btn" onclick="document.body.classList.toggle('pink')">
+        切换主题
+    </button>
+</header>
+
+<!-- Hero 区域 -->
+<div class="hero">
+    <h1>隐私政策</h1>
+    <p>币价雷达非常重视您的隐私。本政策详细说明我们如何收集、使用和保护您的数据。</p>
+</div>
+
+<div class="pp-updated">最后更新日期：2026年8月1日</div>
+
+<!-- 正文内容 -->
+<div class="pp-content">
+
+    <!-- 1. 引言 -->
+    <div class="pp-section">
+        <h2><span class="num">1</span>引言</h2>
+        <p>币价雷达（以下简称"本应用"）是一款用于查看加密货币实时行情和设置价格提醒的工具类应用。本应用仅供学生个人学习测试使用，不构成任何投资建议。</p>
+        <p>我们深知个人信息对您的重要性，因此制定了本隐私政策，以帮助您了解我们如何收集、使用、存储和保护您的数据。请您在使用本应用前，仔细阅读并充分理解本政策的全部内容。</p>
+        <div class="pp-highlight">
+            <p><strong>简单来说：</strong>本应用不需要注册登录，不收集您的个人身份信息，所有数据仅存储在您的设备本地。</p>
+        </div>
+    </div>
+
+    <!-- 2. 我们收集的数据 -->
+    <div class="pp-section">
+        <h2><span class="num">2</span>我们收集的数据</h2>
+        <p>本应用遵循"最小必要"原则，仅收集以下数据：</p>
+        <ul>
+            <li>
+                <strong>您主动输入的数据：</strong>
+                <ul>
+                    <li>币种交易对符号（如 ETHUSDT、BTCUSDT）</li>
+                    <li>币种自定义名称（如"以太坊"）</li>
+                    <li>价格提醒设置（目标价格、触发方向）</li>
+                    <li>应用偏好设置（主题选择、涨跌颜色模式、置顶状态）</li>
+                </ul>
+            </li>
+            <li>
+                <strong>自动获取的行情数据：</strong>
+                <ul>
+                    <li>通过 Binance 公开 API 获取的实时价格数据</li>
+                    <li>24小时价格涨跌幅数据</li>
+                </ul>
+            </li>
+            <li>
+                <strong>设备本地存储的数据：</strong>
+                <ul>
+                    <li>上述所有数据均存储在您设备的 SharedPreferences 中，不会上传至任何服务器</li>
+                </ul>
+            </li>
+        </ul>
+        <div class="pp-highlight">
+            <p><strong>我们不收集：</strong>您的姓名、手机号、邮箱、设备标识符（IMEI/IDFA）、位置信息、通讯录、相册、麦克风等任何个人敏感信息。</p>
+        </div>
+    </div>
+
+    <!-- 3. 数据使用方式 -->
+    <div class="pp-section">
+        <h2><span class="num">3</span>数据使用方式</h2>
+        <p>我们仅将收集的数据用于以下目的：</p>
+        <div class="pp-table-wrap">
+            <table class="pp-table">
+                <thead>
+                    <tr>
+                        <th>数据类型</th>
+                        <th>使用目的</th>
+                        <th>存储位置</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>币种符号与名称</td>
+                        <td>显示您关注的币种列表</td>
+                        <td>设备本地</td>
+                    </tr>
+                    <tr>
+                        <td>实时价格数据</td>
+                        <td>在行情页面展示最新价格与涨跌趋势</td>
+                        <td>设备内存（不持久化）</td>
+                    </tr>
+                    <tr>
+                        <td>价格提醒设置</td>
+                        <td>在价格达到目标时发送系统通知</td>
+                        <td>设备本地</td>
+                    </tr>
+                    <tr>
+                        <td>24h涨跌幅</td>
+                        <td>在币种卡片上显示日内涨跌百分比</td>
+                        <td>设备本地</td>
+                    </tr>
+                    <tr>
+                        <td>主题与偏好</td>
+                        <td>记住您的主题选择和界面设置</td>
+                        <td>设备本地</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 4. 第三方服务 -->
+    <div class="pp-section">
+        <h2><span class="num">4</span>第三方服务</h2>
+        <p>本应用使用以下第三方服务来提供核心功能：</p>
+        <h3>4.1 Binance API</h3>
+        <ul>
+            <li><strong>用途：</strong>获取加密货币的实时价格和24小时涨跌幅数据</li>
+            <li><strong>接口：</strong><code>api/v3/depth</code>（深度行情）和 <code>api/v3/ticker/24hr</code>（24小时统计）</li>
+            <li><strong>传输内容：</strong>仅发送币种符号（如"ETHUSDT"），不包含任何个人信息</li>
+            <li><strong>隐私政策：</strong>请参阅 <a href="https://www.binance.com/en/privacy" target="_blank" class="link-btn">Binance 隐私政策</a></li>
+        </ul>
+        <h3>4.2 Android 系统服务</h3>
+        <ul>
+            <li><strong>通知服务：</strong>用于在价格达到目标时向您发送系统通知</li>
+            <li><strong>WorkManager：</strong>用于在应用关闭后定期检查价格提醒（每15分钟）</li>
+            <li><strong>剪贴板：</strong>仅在您主动点击"作者联系"时复制QQ号到剪贴板</li>
+        </ul>
+        <div class="pp-highlight">
+            <p><strong>重要说明：</strong>本应用不集成任何广告SDK、统计分析SDK、推送服务SDK或第三方登录SDK。</p>
+        </div>
+    </div>
+
+    <!-- 5. 数据存储与安全 -->
+    <div class="pp-section">
+        <h2><span class="num">5</span>数据存储与安全</h2>
+        <h3>5.1 本地存储</h3>
+        <p>您的所有数据（币种列表、提醒设置、偏好选项）均存储在您设备的 SharedPreferences 中，这是 Android 系统提供的本地轻量级存储方案。数据不会上传到任何云端服务器。</p>
+        <h3>5.2 数据安全措施</h3>
+        <ul>
+            <li>所有网络请求通过 HTTPS 加密传输</li>
+            <li>不存储任何密码或敏感凭证</li>
+            <li>不请求不必要的系统权限</li>
+            <li>应用关闭后，内存中的价格数据会被清除，仅保留您设置的币种和提醒</li>
+        </ul>
+        <h3>5.3 数据删除</h3>
+        <ul>
+            <li>您可以随时在应用内删除任何币种或提醒</li>
+            <li>卸载应用后，所有本地数据将被自动清除</li>
+            <li>您可以在系统设置中清除应用数据以删除所有存储的信息</li>
+        </ul>
+    </div>
+
+    <!-- 6. 权限说明 -->
+    <div class="pp-section">
+        <h2><span class="num">6</span>权限说明</h2>
+        <p>本应用请求以下 Android 系统权限：</p>
+        <div class="pp-table-wrap">
+            <table class="pp-table">
+                <thead>
+                    <tr>
+                        <th>权限</th>
+                        <th>用途</th>
+                        <th>是否必须</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>互联网访问（INTERNET）</td>
+                        <td>从 Binance API 获取实时价格</td>
+                        <td>是</td>
+                    </tr>
+                    <tr>
+                        <td>通知权限（POST_NOTIFICATIONS）</td>
+                        <td>发送价格提醒通知</td>
+                        <td>是（Android 13+）</td>
+                    </tr>
+                    <tr>
+                        <td>前台服务（FOREGROUND_SERVICE）</td>
+                        <td>保持价格监控在应用运行时不中断</td>
+                        <td>是</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pp-highlight">
+            <p><strong>承诺：</strong>本应用不请求摄像头、麦克风、位置、通讯录、相册等与核心功能无关的权限。</p>
+        </div>
+    </div>
+
+    <!-- 7. 后台运行说明 -->
+    <div class="pp-section">
+        <h2><span class="num">7</span>后台运行说明</h2>
+        <p>为了确保您不在应用内时仍能收到价格提醒，本应用使用以下机制：</p>
+        <ul>
+            <li><strong>前台运行时：</strong>应用每 15 秒刷新一次价格数据，并通过前台服务保持监控状态</li>
+            <li><strong>应用关闭后：</strong>系统 WorkManager 每 15 分钟自动唤醒检查价格，无需保持应用运行</li>
+            <li><strong>后台检查时：</strong>仅获取有活跃提醒的币种价格，不获取无提醒的币种数据，减少网络请求</li>
+        </ul>
+        <p>后台检查使用的是 Android 系统标准的 WorkManager 机制，不会额外消耗大量电量。</p>
+    </div>
+
+    <!-- 8. 儿童隐私 -->
+    <div class="pp-section">
+        <h2><span class="num">8</span>儿童隐私</h2>
+        <p>本应用不面向 13 岁以下的儿童。我们不会故意收集儿童的个人信息。如果您是儿童的监护人，发现您的孩子向我们提供了个人信息，请与我们联系，我们将及时删除相关信息。</p>
+    </div>
+
+    <!-- 9. 您的权利 -->
+    <div class="pp-section">
+        <h2><span class="num">9</span>您的权利</h2>
+        <p>根据相关法律法规，您享有以下权利：</p>
+        <ul>
+            <li><strong>知情权：</strong>了解本应用如何收集和使用您的数据（即本政策）</li>
+            <li><strong>删除权：</strong>随时删除币种、提醒或清除应用数据</li>
+            <li><strong>卸载权：</strong>卸载应用即可完全清除所有本地数据</li>
+            <li><strong>拒绝权：</strong>拒绝授予通知权限（将无法收到价格提醒，但不影响行情查看）</li>
+        </ul>
+    </div>
+
+    <!-- 10. 政策更新 -->
+    <div class="pp-section">
+        <h2><span class="num">10</span>政策更新</h2>
+        <p>我们可能会不时更新本隐私政策。更新后的政策将在本页面发布，并更新顶部的"最后更新日期"。</p>
+        <p>如果政策发生重大变更，我们会在应用内的下次更新说明中提醒您。</p>
+        <p>建议您定期查阅本页面以了解最新的隐私政策内容。</p>
+    </div>
+
+    <!-- 11. 联系我们 -->
+    <div class="pp-section">
+        <h2><span class="num">11</span>联系我们</h2>
+        <p>如果您对本隐私政策有任何疑问、建议或投诉，可通过以下方式联系我们：</p>
+        <div class="pp-contact-card">
+            <div class="pp-contact-icon">Q</div>
+            <div class="pp-contact-info">
+                <p class="label">作者 QQ</p>
+                <p class="value">3974281805</p>
+            </div>
+        </div>
+        <div class="pp-contact-card">
+            <div class="pp-contact-icon">T</div>
+            <div class="pp-contact-info">
+                <p class="label">Telegram 社区</p>
+                <p class="value"><a href="https://t.me/shuoweb" target="_blank" class="link-plain" style="color:var(--primary);">@shuoweb</a></p>
+            </div>
+        </div>
+        <p>我们将在收到您的反馈后尽快回复。</p>
+    </div>
+
+</div>
+
+<!-- 页脚 -->
+<footer>
+    <p>币价雷达 v1.7 · 学生个人测试用途</p>
+    <p style="margin-top: 8px; font-size: 13px; opacity: 0.7;">本应用不构成任何投资建议 · 加密货币投资有风险</p>
+    <div class="pp-footer-links">
+        <a href="https://shuoweb.com" class="footer-link">shuoweb.com</a>
+        <a href="https://t.me/shuoweb" class="footer-link">Telegram</a>
+    </div>
+</footer>
+
+</body>
+</html>
